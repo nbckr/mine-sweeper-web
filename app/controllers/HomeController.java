@@ -25,6 +25,7 @@ public class HomeController extends Controller {
         String tuiOutput = tui.printTui();
 
         return ok(tuiOutput);
+        //return ok(game.render(tuiOutput));
     }
 
     /**
