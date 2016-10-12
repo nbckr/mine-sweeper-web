@@ -1,0 +1,28 @@
+New log file opened at Wed Oct 12 10:55:45 CEST 2016 by 2128@nbk-aspire-win
+Taking next connection to: 54119
+New client attempting to connect on port: 54120-54119
+  Address = /172.20.173.107:54119
+This client on port 54120 has uuid 7fb9660c-e80d-46d0-8a63-b99527b42664 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-7fb9660c-e80d-46d0-8a63-b99527b42664
+Taking next connection to: 54119
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 54119
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 54119
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 54119
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 54119
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 54119
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 2128@nbk-aspire-win logs at Wed Oct 12 11:13:45 CEST 2016, goodbye.
