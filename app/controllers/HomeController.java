@@ -1,7 +1,10 @@
 package controllers;
 
+import de.htwg.minesweeper.aview.tui.TUI;
+import de.htwg.minesweeper.controller.*;
 import play.mvc.*;
 
+import play.mvc.Controller;
 import views.html.*;
 
 import static play.mvc.Results.ok;
@@ -21,8 +24,12 @@ public class HomeController extends Controller {
      */
     public Result index() {
 
-        // TODO: Access controller (create jar, copy to lib folder)
-        return ok("Test");
+        de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
+        TUI tui = new TUI(controller);
+
+        String tuiOutput = tui.printTui();
+
+        return ok(tuiOutput);
     }
 
 }
