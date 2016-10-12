@@ -16,6 +16,17 @@ import static play.mvc.Results.ok;
  */
 public class HomeController extends Controller {
 
+    public Result processCommand(String command) {
+
+        de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
+        TUI tui = new TUI(controller);
+        tui.answerOptions(command);
+
+        String tuiOutput = tui.printTui();
+
+        return ok(tuiOutput);
+    }
+
     /**
      * An action that renders an HTML page with a welcome message.
      * The configuration in the <code>routes</code> file means that
@@ -24,12 +35,7 @@ public class HomeController extends Controller {
      */
     public Result index() {
 
-        de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
-        TUI tui = new TUI(controller);
-
-        String tuiOutput = tui.printTui();
-
-        return ok(tuiOutput);
+        return ok("Hello");
     }
 
 }
