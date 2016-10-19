@@ -24,8 +24,9 @@ public class HomeController extends Controller {
 
         String tuiOutput = tui.printTui();
 
-        return ok(tuiOutput);
+        //return ok(tuiOutput);
         //return ok(game.render(tuiOutput));
+		return ok(views.html.game.render(tuiOutput));
     }
 
     /**
@@ -38,5 +39,4 @@ public class HomeController extends Controller {
 
         return ok("Hello");
     }
-
 }
