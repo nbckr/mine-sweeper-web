@@ -49,3 +49,5 @@ target
 
 .sbtserver/
 project/project/
+project/target/
+project/.sbtserver
