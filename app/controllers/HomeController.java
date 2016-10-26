@@ -1,13 +1,11 @@
 package controllers;
 
 import de.htwg.minesweeper.aview.tui.TUI;
-import de.htwg.minesweeper.controller.*;
-import play.mvc.*;
-
 import play.mvc.Controller;
-import views.html.*;
-
-import static play.mvc.Results.ok;
+import play.mvc.Result;
+import views.html.about;
+import views.html.index;
+import views.html.instructions;
 
 
 /**
@@ -15,6 +13,10 @@ import static play.mvc.Results.ok;
  * to the application's home page.
  */
 public class HomeController extends Controller {
+
+    public Result game() {
+        return processCommand("h");
+    }
 
     public Result processCommand(String command) {
 
@@ -36,6 +38,14 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-        return ok(index.render(""));
+        return ok(index.render("HELLO!"));
+    }
+
+    public Result instructions() {
+        return ok(instructions.render());
+    }
+
+    public Result about() {
+        return ok(about.render());
     }
 }
