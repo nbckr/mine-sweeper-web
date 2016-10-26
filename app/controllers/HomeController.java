@@ -14,19 +14,18 @@ import views.html.instructions;
  */
 public class HomeController extends Controller {
 
+    de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
+    TUI tui = new TUI(controller);
+
     public Result game() {
         return processCommand("h");
     }
 
     public Result processCommand(String command) {
 
-        de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
-        TUI tui = new TUI(controller);
         tui.answerOptions(command);
 
         String tuiOutput = tui.printTui();
-        //return ok(tuiOutput);
-        //return ok(game.render(tuiOutput));
         return ok(views.html.game.render(tuiOutput));
     }
 
