@@ -26,7 +26,7 @@ public class HomeController extends Controller {
 
         //return ok(tuiOutput);
         //return ok(game.render(tuiOutput));
-		return ok(views.html.game.render(tuiOutput));
+		      return ok(views.html.game.render(tuiOutput));
     }
 
     /**
@@ -36,7 +36,6 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-
-        return ok("Hello");
+        return ok(index.render(""));
     }
 }
