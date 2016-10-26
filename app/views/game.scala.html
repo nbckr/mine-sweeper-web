@@ -1,10 +1,13 @@
 @(tuiString: String)
 
 @main("Welcome to MineSweeper!") {
-    <div id="game">
-        <code>
-            @Html(HtmlFormat.escape(tuiString).toString.replace("\n", "<br />"))
-        </code>
+
+    <div class="container">
+
+        <div id="game" class="center-block">
+        @Html(HtmlFormat.escape(tuiString).toString.replace("\n", "<br />"))
+        </div>
+
     </div>
 }
 

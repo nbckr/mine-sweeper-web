@@ -12,5 +12,6 @@ libraryDependencies ++= Seq(
   javaWs
 )
 
+includeFilter in (Assets, LessKeys.less) := "utils/*.less"
 
 fork in run := false
