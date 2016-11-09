@@ -21,6 +21,11 @@ public class HomeController extends Controller {
         return processCommand("h");
     }
 
+    public Result getJson() {
+        return ok(tui.getJson()).as("text/json");
+    }
+
+
     public Result processCommand(String command) {
 
         tui.answerOptions(command);
