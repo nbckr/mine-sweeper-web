@@ -1,10 +1,17 @@
 package controllers;
 
-import com.google.gson.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import de.htwg.se.minesweeper.aview.tui.TUI;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
+import views.html.about;
+import views.html.index;
+import views.html.instructions;
 
 
 /**
@@ -35,8 +42,37 @@ public class HomeController extends Controller {
         return ok(gson.toJson(data)).as("text/json");
     }
 
+    @BodyParser.Of(BodyParser.Json.class)
     public Result postJson() {
-        return null;
+
+        JsonNode json = request().body().asJson();
+        String action = json.findPath("action").textValue();
+        if (action == null) {
+            return badRequest("Missing parameter [action]");
+        } else {
+
+            final int row = json.findPath("row").intValue();
+            final int col = json.findPath("col").intValue();
+
+            switch (action) {
+
+                case "reveal":
+                    controller.revealCell(row, col);
+                    return ok();
+
+                case "flag":
+                    controller.toggleFlag(row, col);
+                    return ok();
+
+                case "restart":
+                    controller.startNewGame();
+                    return ok();
+
+                default:
+                    return badRequest("Weird stuff, right?!");
+            }
+
+        }
     }
 
     public Result processCommand(String command) {

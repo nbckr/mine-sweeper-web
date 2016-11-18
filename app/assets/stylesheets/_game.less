@@ -1,0 +1,78 @@
+@import "hover/hover";
+
+#game {
+  &.gameover {
+    background-color: darkred;
+    transition: background-color 1000ms linear;
+  }
+}
+
+.default-border {
+  margin: 0.1vw;
+  padding: 0.1vw;
+}
+
+#grid {
+  display: block;
+
+  &.gameover {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    -webkit-animation-name: hvr-wobble-to-top-right;
+    animation-name: hvr-wobble-to-top-right;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+  }
+}
+
+.row {
+  display: block;
+  .default-border;
+}
+
+.cell {
+  cursor: pointer;
+  background: #e1e1e1;
+  text-decoration: none;
+  color: #666;
+  display: inline-block;
+  border-radius: 0.2vw;
+
+  width: 3.5vw;
+  height: 3.5vw;
+  font-size: 2.5vw;
+  text-align: center;
+  margin: 0.3em;
+  padding: 0.3em;
+
+  user-select: none;
+}
+
+.flagged {
+  background-color: deepskyblue;
+}
+
+.mine {
+
+  // copied from hvr-buzz
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-animation-name: hvr-buzz;
+  animation-name: hvr-buzz;
+  -webkit-animation-duration: 0.15s;
+  animation-duration: 0.15s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}

@@ -3,19 +3,28 @@ var stateData;
 
 var $grid;
 
-// on load
+// TODO Mark Button "Neues Spiel" -> Dialogfenster mit Nachfrage -> neues Spiel
+// TODO Mark Spielfeld schicker machen vom Design
+
+
 $(function () {
 
-    console.log("Page loaded");
+    $('#start-button').on('click', function () {
+        makeAjaxCall('POST', 'restart');
+        updateGrid();
+        resetClasses();
+    });
+
+    // Prevent context menu
+    $('body').on('contextmenu', function () {
+        return false;
+    });
 
     update();
-
-//    update();    // will generate grid at first call
-
-
 });
 
 function update() {
+
     $.ajax({
         url: 'game/json',
         dataType: 'json',
@@ -26,6 +35,8 @@ function update() {
 
             if (!$grid || $grid.children().length == 0) {
                 generateGrid();
+            } else {
+                updateGrid();
             }
         },
         error: function () {
@@ -39,66 +50,81 @@ function generateGrid() {
     $grid = $('#grid');
 
     gridData.forEach(function (row) {
-        console.log(row);
 
         var $row = $('<div class="row">');
 
         row.forEach(function(cell) {
-
-            console.log(cell)
             var $cell = $('<div />', {
                 id: cell.position.row + ',' + cell.position.col,
-                class: "cell",
-                //text: "CELL",
+                class: 'cell hvr-grow',
                 'data-row': cell.position.row,
                 'data-col': cell.position.col,
-                click: function (e) {
-                    e.preventDefault();
-                    console.log($(this))
+                click: null
+            });
+
+            $cell.on('mousedown', function (e) {
+                if (e.button === 0) {
+                    makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col);
+                }
+                if (e.button === 2) {
+                    makeAjaxCall('POST', 'flag', cell.position.row, cell.position.col);
                 }
             });
 
-            // revealed
-            if (cell.isRevealed && !cell.hasMine) {
-                $cell.text(cell.surroundingMines);
-            }
-            else if (cell.isRevealed && cell.hasMine) {
-                $cell.text('M').addClass('mine');
-            }
-
-            // hidden
-            else if (cell.isFlagged) {
-                $cell.text('F').addClass('flagged');
-            }
-            else {
-                $cell.text('X').removeClass('flagged');
-            }
+            updateCell($cell, cell);
 
             $row.append($cell);
         });
         $grid.append($row);
     });
-
 }
 
+function updateGrid() {
 
-$(function () {
+    $grid.children().children().each(function () {
+        var targetCell = $(this);
+        var row = targetCell.attr('data-row');
+        var col = targetCell.attr('data-col');
+        var cell = gridData[row][col];
+        updateCell(targetCell, cell);
+    })
+}
 
-    $('#update-button').on('click', function () {
-        console.log("UPDATE!");
-        $.ajax({
-            url: 'json',
-            dataType: 'json',
-            type: 'GET',
-            success: function (data) {
-                console.log('success');
-                $('#json-input:first').text(data);
-            },
-            error: function () {
-                console.log('error');
-            }
+function updateCell($targetCell, cellData) {
 
-        })
+    if (cellData.isRevealed) {
+        $targetCell.text(cellData.surroundingMines).removeClass('flagged').addClass('revealed');
+
+        if (cellData.hasMine) {
+            $targetCell.text('M').addClass('mine');
+            $grid.add('#game').addClass('gameover');
+        }
+    }
+
+    // hidden
+    else if (cellData.isFlagged) {
+        $targetCell.text('F').addClass('flagged');
+    }
+    else {
+        $targetCell.text('X').removeClass('flagged');
+    }
+}
+
+function makeAjaxCall(type, action, row, col) {
+    $.ajax({
+        type: type,
+        url: 'game/json',
+        data: JSON.stringify({
+            action: action,
+            row: row || 0,
+            col: col || 0
+        }),
+        complete: update,
+        contentType: 'application/json'
     });
+}
 
-});
+function resetClasses() {
+    $grid.add('#game').removeClass('gameover');
+    $grid.children().children().removeClass('revealed flagged mine');
+}
