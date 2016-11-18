@@ -1,11 +1,10 @@
 package controllers;
 
-import de.htwg.minesweeper.aview.tui.TUI;
+import com.google.gson.Gson;
+import de.htwg.se.minesweeper.aview.tui.TUI;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.about;
-import views.html.index;
-import views.html.instructions;
+import views.html.*;
 
 
 /**
@@ -14,23 +13,32 @@ import views.html.instructions;
  */
 public class HomeController extends Controller {
 
-    de.htwg.minesweeper.controller.Controller controller = new de.htwg.minesweeper.controller.Controller();
+    private final Gson gson = new Gson();
+
+    de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
     TUI tui = new TUI(controller);
 
     public Result game() {
         return processCommand("h");
     }
 
-    public Result getJson() {
-        return ok(tui.getJson()).as("text/json");
+    public Result getJsonState() {
+        return ok(gson.toJson(controller.getState())).as("text/json");
     }
 
+    public Result getJsonGrid() {
+        return ok(gson.toJson(controller.getGrid())).as("text/json");
+    }
+
+    public Result postJson() {
+        return null;
+    }
 
     public Result processCommand(String command) {
 
-        tui.answerOptions(command);
+        tui.processInput(command);
 
-        String tuiOutput = tui.printTui();
+        String tuiOutput = tui.printTUIAsString();
         return ok(views.html.game.render(tuiOutput));
     }
 
