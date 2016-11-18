@@ -15,9 +15,8 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /game                       controllers.HomeController.game
 GET     /game/tui/play/:command     controllers.HomeController.processCommand(command: String)
 
-GET     /game/json/grid             controllers.HomeController.getJsonGrid
-GET     /game/json/state            controllers.HomeController.getJsonState
-POST    /game/json/play             controllers.HomeController.postJson
+GET     /game/json                  controllers.HomeController.getJson
+POST    /game/json                  controllers.HomeController.postJson
 
 GET     /instructions               controllers.HomeController.instructions()
 

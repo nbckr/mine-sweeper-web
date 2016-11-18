@@ -1,6 +1,6 @@
 package controllers;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import de.htwg.se.minesweeper.aview.tui.TUI;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -13,7 +13,7 @@ import views.html.*;
  */
 public class HomeController extends Controller {
 
-    private final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
     de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
     TUI tui = new TUI(controller);
@@ -26,8 +26,13 @@ public class HomeController extends Controller {
         return ok(gson.toJson(controller.getState())).as("text/json");
     }
 
-    public Result getJsonGrid() {
-        return ok(gson.toJson(controller.getGrid())).as("text/json");
+    public Result getJson() {
+
+        final JsonObject data = new JsonObject();
+        data.add("grid", gson.toJsonTree(controller.getGrid().getCellsAsRows()));
+        data.add("state", gson.toJsonTree(controller.getState()));
+
+        return ok(gson.toJson(data)).as("text/json");
     }
 
     public Result postJson() {
