@@ -1,12 +1,6 @@
 @import "hover/hover";
 @import "lib/font-awesome/less/font-awesome";
-
-#body-wrapper {
-  transition: background-color 750ms linear;
-  &.gameover {
-    background-color: darkred;
-  }
-}
+@import "_variables";
 
 .default-border {
   margin: 0.1vw;
@@ -80,10 +74,8 @@
     .fa-but-larger;
 
     // copied from hvr-buzz
-    //display: inline-block;
-    //vertical-align: middle;
-    -webkit-transform: perspective(1px) translateZ(0);
-    transform: perspective(1px) translateZ(0);
+    -webkit-transform: perspective(1px) translateZ(0) scale(1.2, 1.2);
+    transform: perspective(1px) translateZ(0) scale(1.2, 1.2);
     box-shadow: 0 0 1px rgba(0, 0, 0, 0);
     -webkit-animation-name: hvr-buzz;
     animation-name: hvr-buzz;

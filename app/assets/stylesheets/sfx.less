@@ -1,0 +1,79 @@
+#body-wrapper {
+  transition: background-color 750ms linear;
+  &.gameover {
+    background-color: darkred;
+  }
+}
+
+#grid {
+  transition: all 1500ms ease-out;
+  &.gameover {
+    transform: translateY(80) scale(0.9) rotate(3deg);
+  }
+}
+
+// https://premiumcoding.com/css3-tricks-falling-leaves-css/
+.falling {
+  animation-name: falling;
+  animation-duration: 4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  //-webkit-animation: falling 3.5s 1 ease-in;
+
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  //animation-direction: reverse;
+}
+
+.falling:nth-child(5n+5) {
+
+  -webkit-animation-delay: 0.1s;
+  -moz-animation-delay: 0.1s;
+}
+.falling:nth-child(3n+2) {
+
+  -webkit-animation-delay: 0.2s;
+  -moz-animation-delay: 0.2s;
+}
+.falling:nth-child(2n+4) {
+
+  -webkit-animation-delay: 0.4s;
+  -moz-animation-delay: 0.4s;
+}
+
+.falling:nth-child(3n+11) {
+
+  -webkit-animation-delay: 0.3s;
+  -moz-animation-delay: 0.3s;
+}
+.falling:nth-child(7n+2) {
+
+  -webkit-animation-delay: 0.5s;
+  -moz-animation-delay: 0.5s;
+}
+.falling:nth-child(4n+5) {
+
+  -webkit-animation-delay: 0.6s;
+  -moz-animation-delay: 0.6s;
+}
+.falling:nth-child(3n+7) {
+
+  -webkit-animation-delay: 0.7s;
+  -moz-animation-delay: 0.7s;
+}
+
+
+@-webkit-keyframes falling {
+  0% {
+    opacity: 1;
+    -webkit-transform: translate(0, 0px) rotateZ(0deg);
+  }
+  75% {
+    opacity: 0.6;
+    -webkit-transform: translate(100px, 600px) rotateZ(270deg);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translate(150px, 800px) rotateZ(360deg);
+  }
+}

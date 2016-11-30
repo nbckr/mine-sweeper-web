@@ -3,9 +3,6 @@ var stateData;
 
 var $grid;
 
-// TODO Mark Button "Neues Spiel" -> Dialogfenster mit Nachfrage -> neues Spiel
-
-
 $(function () {
 
     $('#start-button').on('click', function () {
@@ -101,7 +98,8 @@ function updateCell($targetCell, cellData) {
 
         if (cellData.hasMine) {
             $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
-            $grid.add('#body-wrapper').addClass('gameover');
+            $grid.add('#body-wrapper').add('#grid').addClass('gameover');
+            $grid.children().children().not('.revealed').addClass('falling');
         }
     }
 
@@ -130,5 +128,5 @@ function makeAjaxCall(type, action, row, col) {
 
 function resetClasses() {
     $grid.add('#body-wrapper').removeClass('gameover');
-    $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag');
+    $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag falling');
 }
