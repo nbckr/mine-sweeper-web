@@ -4,7 +4,6 @@ var stateData;
 var $grid;
 
 // TODO Mark Button "Neues Spiel" -> Dialogfenster mit Nachfrage -> neues Spiel
-// TODO Mark Spielfeld schicker machen vom Design
 
 
 $(function () {
@@ -98,7 +97,7 @@ function updateCell($targetCell, cellData) {
 
         if (cellData.hasMine) {
             $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
-            $grid.add('#game').addClass('gameover');
+            $grid.add('#body-wrapper').addClass('gameover');
         }
     }
 
@@ -126,6 +125,6 @@ function makeAjaxCall(type, action, row, col) {
 }
 
 function resetClasses() {
-    $grid.add('#game').removeClass('gameover');
+    $grid.add('#body-wrapper').removeClass('gameover');
     $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag');
 }
