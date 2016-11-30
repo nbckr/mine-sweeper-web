@@ -96,7 +96,7 @@ function updateCell($targetCell, cellData) {
         $targetCell.text(cellData.surroundingMines).removeClass('flagged').addClass('revealed');
 
         if (cellData.hasMine) {
-            $targetCell.text('M').addClass('mine');
+            $targetCell.text('').addClass('mine fa fa-bomb');
             $grid.add('#game').addClass('gameover');
         }
     }
@@ -106,7 +106,7 @@ function updateCell($targetCell, cellData) {
         $targetCell.text('F').addClass('flagged');
     }
     else {
-        $targetCell.text('X').removeClass('flagged');
+        $targetCell.text('').removeClass('flagged');
     }
 }
 
@@ -126,5 +126,5 @@ function makeAjaxCall(type, action, row, col) {
 
 function resetClasses() {
     $grid.add('#game').removeClass('gameover');
-    $grid.children().children().removeClass('revealed flagged mine');
+    $grid.children().children().removeClass('revealed flagged mine fa fa-bomb');
 }
