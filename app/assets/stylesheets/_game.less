@@ -39,10 +39,10 @@
 }
 
 .cell {
+  color: @black;
+  background: @light-grey;
   cursor: pointer;
-  background: #e1e1e1;
   text-decoration: none;
-  color: #666;
   display: inline-block;
   border-radius: 0.2vw;
 
@@ -54,28 +54,39 @@
   padding: 0.3em;
 
   user-select: none;
+
+  &.surrounding-0 {
+    background-color: @green;
+  }
+  &.surrounding-1 {
+    background-color: @yellow-1;
+  }
+  &.surrounding-2 {
+    background-color: @yellow-2;
+  }
+  &.surrounding-3, surrounding-4, &.surrounding-5, &.surrounding-6, &.surrounding-7, &.surrounding-8 {
+    background-color: @yellow-3;
+  }
+  &.mine {
+    background-color: @red;
+
+    // copied from hvr-buzz
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    -webkit-animation-name: hvr-buzz;
+    animation-name: hvr-buzz;
+    -webkit-animation-duration: 0.15s;
+    animation-duration: 0.15s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+  }
 }
 
 .flagged {
-  background-color: deepskyblue;
-}
-
-.mine {
-  //.fa;
-  //.fa-bomb;
-
-  // copied from hvr-buzz
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  -webkit-animation-name: hvr-buzz;
-  animation-name: hvr-buzz;
-  -webkit-animation-duration: 0.15s;
-  animation-duration: 0.15s;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+  //background-color: deepskyblue;
 }

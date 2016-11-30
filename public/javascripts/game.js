@@ -63,10 +63,14 @@ function generateGrid() {
             });
 
             $cell.on('mousedown', function (e) {
+
+                console.log(e);
+
                 if (e.button === 0) {
                     makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col);
                 }
-                if (e.button === 2) {
+                //if (e.button === 2) {
+                else {
                     makeAjaxCall('POST', 'flag', cell.position.row, cell.position.col);
                 }
             });
@@ -93,17 +97,17 @@ function updateGrid() {
 function updateCell($targetCell, cellData) {
 
     if (cellData.isRevealed) {
-        $targetCell.text(cellData.surroundingMines).removeClass('flagged').addClass('revealed');
+        $targetCell.text(cellData.surroundingMines).removeClass('flagged').addClass('revealed surrounding-' + cellData.surroundingMines);
 
         if (cellData.hasMine) {
-            $targetCell.text('').addClass('mine fa fa-bomb');
+            $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
             $grid.add('#game').addClass('gameover');
         }
     }
 
     // hidden
     else if (cellData.isFlagged) {
-        $targetCell.text('F').addClass('flagged');
+        $targetCell.text('').addClass('flagged fa fa-flag');
     }
     else {
         $targetCell.text('').removeClass('flagged');
@@ -126,5 +130,5 @@ function makeAjaxCall(type, action, row, col) {
 
 function resetClasses() {
     $grid.add('#game').removeClass('gameover');
-    $grid.children().children().removeClass('revealed flagged mine fa fa-bomb');
+    $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag');
 }
