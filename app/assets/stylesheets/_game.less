@@ -17,7 +17,7 @@
   display: block;
 
   &.gameover {
-    display: inline-block;
+  //display: inline-block;
     vertical-align: middle;
     -webkit-transform: perspective(1px) translateZ(0);
     transform: perspective(1px) translateZ(0);
@@ -39,19 +39,23 @@
 }
 
 .cell {
-  color: @black;
+  color: black;
   background: @light-grey;
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
   border-radius: 0.2vw;
 
-  width: 3.5vw;
-  height: 3.5vw;
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  width: 40px;
+  height: 40px;
   font-size: 2.5vw;
   text-align: center;
-  margin: 0.3em;
-  padding: 0.3em;
+  margin: 0.15em;
+  //padding: 0.3em;
 
   user-select: none;
 
@@ -64,15 +68,17 @@
   &.surrounding-2 {
     background-color: @yellow-2;
   }
-  &.surrounding-3, surrounding-4, &.surrounding-5, &.surrounding-6, &.surrounding-7, &.surrounding-8 {
+  &.surrounding-3, &.surrounding-4, &.surrounding-5, &.surrounding-6, &.surrounding-7, &.surrounding-8 {
     background-color: @yellow-3;
   }
   &.mine {
     background-color: @red;
 
+    .fa-but-larger;
+
     // copied from hvr-buzz
-    display: inline-block;
-    vertical-align: middle;
+    //display: inline-block;
+    //vertical-align: middle;
     -webkit-transform: perspective(1px) translateZ(0);
     transform: perspective(1px) translateZ(0);
     box-shadow: 0 0 1px rgba(0, 0, 0, 0);
@@ -85,8 +91,13 @@
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
   }
+
+  &.flagged {
+    .fa-but-larger;
+  }
 }
 
-.flagged {
-  //background-color: deepskyblue;
+.fa-but-larger {
+  font-size: 140%;
 }
+

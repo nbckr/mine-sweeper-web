@@ -58,13 +58,10 @@ function generateGrid() {
                 id: cell.position.row + ',' + cell.position.col,
                 class: 'cell hvr-grow',
                 'data-row': cell.position.row,
-                'data-col': cell.position.col,
-                click: null
+                'data-col': cell.position.col
             });
 
             $cell.on('mousedown', function (e) {
-
-                console.log(e);
 
                 if (e.button === 0) {
                     makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col);
@@ -97,7 +94,7 @@ function updateGrid() {
 function updateCell($targetCell, cellData) {
 
     if (cellData.isRevealed) {
-        $targetCell.text(cellData.surroundingMines).removeClass('flagged').addClass('revealed surrounding-' + cellData.surroundingMines);
+        $targetCell.text(cellData.surroundingMines).removeClass('flagged fa fa-flag').addClass('revealed surrounding-' + cellData.surroundingMines);
 
         if (cellData.hasMine) {
             $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
@@ -110,7 +107,7 @@ function updateCell($targetCell, cellData) {
         $targetCell.text('').addClass('flagged fa fa-flag');
     }
     else {
-        $targetCell.text('').removeClass('flagged');
+        $targetCell.text('').removeClass('flagged fa-flag');
     }
 }
 
