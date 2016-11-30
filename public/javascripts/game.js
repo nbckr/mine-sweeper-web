@@ -2,13 +2,22 @@ var gridData;
 var stateData;
 
 var $grid;
+var $nav;
+
+
 
 $(function () {
 
+    setGlobalVariables();
+
     $('#start-button').on('click', function () {
-        makeAjaxCall('POST', 'restart');
-        updateGrid();
-        resetClasses();
+
+        $grid.addClass('zoomOutRight');
+        setTimeout(restartGame, 1000);
+
+        //$grid.addClass('zoomInLeft');
+        //$grid.removeClass('zoomOutRight zoomInLeft');
+
     });
 
     $('#settings-button').on('click', function () {
@@ -46,8 +55,6 @@ function update() {
 }
 
 function generateGrid() {
-
-    $grid = $('#grid');
 
     gridData.forEach(function (row) {
 
@@ -98,7 +105,7 @@ function updateCell($targetCell, cellData) {
 
         if (cellData.hasMine) {
             $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
-            $grid.add('#body-wrapper').add('#grid').addClass('gameover');
+            $grid.add('#body-wrapper').add($nav).addClass('gameover');
             $grid.children().children().not('.revealed').addClass('falling');
         }
     }
@@ -127,6 +134,28 @@ function makeAjaxCall(type, action, row, col) {
 }
 
 function resetClasses() {
-    $grid.add('#body-wrapper').removeClass('gameover');
+    $grid.add('#body-wrapper').add($nav).removeClass('gameover');
     $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag falling');
+}
+
+function restartGame() {
+
+    if ($nav.hasClass('gameover')) {
+        $nav.addClass('slideInDown');
+        removeClassAfter($nav, 'slideInDown', 1000);
+    }
+
+    makeAjaxCall('POST', 'restart');
+    updateGrid();
+    resetClasses();
+    $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
+}
+
+function setGlobalVariables() {
+    $grid = $('#grid');
+    $nav = $('.navbar');
+}
+
+function removeClassAfter($target, classname, milliseconds) {
+    setTimeout($target.removeClass.bind(null, classname), milliseconds);
 }
