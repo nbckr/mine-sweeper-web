@@ -14,6 +14,10 @@ $(function () {
         resetClasses();
     });
 
+    $('#settings-button').on('click', function () {
+
+    });
+
     // Prevent context menu
     $('body').on('contextmenu', function () {
         return false;
