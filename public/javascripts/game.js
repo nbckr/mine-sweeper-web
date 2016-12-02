@@ -3,7 +3,7 @@ var stateData;
 
 var $grid;
 var $nav;
-
+var explosionSound;
 
 
 $(function () {
@@ -29,10 +29,10 @@ $(function () {
         return false;
     });
 
-    update();
+    updateData();
 });
 
-function update() {
+function updateData() {
 
     $.ajax({
         url: 'game/json',
@@ -71,11 +71,11 @@ function generateGrid() {
             $cell.on('mousedown', function (e) {
 
                 if (e.button === 0) {
-                    makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col);
+                    makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col, updateData);
                 }
                 //if (e.button === 2) {
                 else {
-                    makeAjaxCall('POST', 'flag', cell.position.row, cell.position.col);
+                    makeAjaxCall('POST', 'flag', cell.position.row, cell.position.col, updateData);
                 }
             });
 
@@ -103,10 +103,10 @@ function updateCell($targetCell, cellData) {
     if (cellData.isRevealed) {
         $targetCell.text(cellData.surroundingMines).removeClass('flagged fa fa-flag').addClass('revealed surrounding-' + cellData.surroundingMines);
 
+        // GAME OVER
         if (cellData.hasMine) {
-            $targetCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
-            $grid.add('#body-wrapper').add($nav).addClass('gameover');
-            $grid.children().children().not('.revealed').addClass('falling');
+            playExplosionSound();
+            explodePage($targetCell);
         }
     }
 
@@ -119,7 +119,7 @@ function updateCell($targetCell, cellData) {
     }
 }
 
-function makeAjaxCall(type, action, row, col) {
+function makeAjaxCall(type, action, row, col, callback) {
     $.ajax({
         type: type,
         url: 'game/json',
@@ -128,7 +128,7 @@ function makeAjaxCall(type, action, row, col) {
             row: row || 0,
             col: col || 0
         }),
-        complete: update,
+        complete: callback,
         contentType: 'application/json'
     });
 }
@@ -145,8 +145,8 @@ function restartGame() {
         removeClassAfter($nav, 'slideInDown', 1000);
     }
 
-    makeAjaxCall('POST', 'restart');
-    updateGrid();
+    makeAjaxCall('POST', 'restart', null, null, updateData);
+    //updateGrid();
     resetClasses();
     $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
 }
@@ -154,8 +154,20 @@ function restartGame() {
 function setGlobalVariables() {
     $grid = $('#grid');
     $nav = $('.navbar');
+    explosionSound = $ ('#explosion-sound').get(0);
 }
 
 function removeClassAfter($target, classname, milliseconds) {
     setTimeout($target.removeClass.bind(null, classname), milliseconds);
+}
+
+function explodePage(mineCell) {
+    mineCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
+    $grid.add('#body-wrapper').add($nav).addClass('gameover');
+    $grid.children().children().not('.revealed').addClass('falling');
+}
+
+function playExplosionSound() {
+    explosionSound.currentTime = 1.66;
+    explosionSound.play();
 }

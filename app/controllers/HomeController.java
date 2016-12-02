@@ -69,7 +69,7 @@ public class HomeController extends Controller {
                     return ok();
 
                 default:
-                    return badRequest("Weird stuff, right?!");
+                    return badRequest("Unknown JSON game action");
             }
 
         }
