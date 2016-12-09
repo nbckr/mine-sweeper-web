@@ -4,11 +4,15 @@ var stateData;
 var $grid;
 var $nav;
 var explosionSound;
+var $wsLog;
+var webSocket;
 
 
 $(function () {
 
     setGlobalVariables();
+
+    connectToWebSocket(restartGame);
 
     $('#start-button').on('click', function () {
 
@@ -28,30 +32,54 @@ $(function () {
     $('body').on('contextmenu', function () {
         return false;
     });
-
-    updateData();
 });
 
-function updateData() {
+function connectToWebSocket(callbackAfterOpen) {
 
-    $.ajax({
-        url: 'game/json',
-        dataType: 'json',
-        type: 'GET',
-        success: function (response) {
-            gridData = response.grid;
-            stateData = response.state;
+    webSocket = new WebSocket("ws://localhost:9000/socket");
+    logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (ready)');
 
-            if (!$grid || $grid.children().length == 0) {
-                generateGrid();
-            } else {
-                updateGrid();
-            }
-        },
-        error: function () {
-            console.log('error');
-        }
-    });
+    webSocket.onopen = function () {
+        logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (open)');
+        restartGame();
+    };
+
+    webSocket.onmessage = function (message) {
+
+        var messageAsJson = JSON.parse(message.data);
+        updateData(messageAsJson);
+    };
+
+    webSocket.onclose = function () {
+        logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (Closed)');
+    };
+}
+
+function logWebSocketConnection(message) {
+    $wsLog.append('<p>' + message + '</p>');
+}
+
+function sendStringToWebSocket(messageObject) {
+    logWebSocketConnection('Going to send message to server');
+    webSocket.send(JSON.stringify(messageObject));
+    logWebSocketConnection('Sent message to server');
+}
+
+
+function updateData(messageAsJson) {
+
+    gridData = messageAsJson.grid;
+    stateData = messageAsJson.state;
+
+    if (!$grid || $grid.children().length == 0) {
+        generateGrid();
+    } else {
+        updateGrid();
+    }
+
+    if (stateData === 'NEW_GAME') {
+        resetClasses();
+    }
 }
 
 function generateGrid() {
@@ -60,7 +88,7 @@ function generateGrid() {
 
         var $row = $('<div class="row">');
 
-        row.forEach(function(cell) {
+        row.forEach(function (cell) {
             var $cell = $('<div />', {
                 id: cell.position.row + ',' + cell.position.col,
                 class: 'cell hvr-grow',
@@ -71,11 +99,19 @@ function generateGrid() {
             $cell.on('mousedown', function (e) {
 
                 if (e.button === 0) {
-                    makeAjaxCall('POST', 'reveal', cell.position.row, cell.position.col, updateData);
+                    sendStringToWebSocket({
+                        action: 'reveal',
+                        row: cell.position.row,
+                        col: cell.position.col
+                    });
                 }
                 //if (e.button === 2) {
                 else {
-                    makeAjaxCall('POST', 'flag', cell.position.row, cell.position.col, updateData);
+                    sendStringToWebSocket({
+                        action: 'flag',
+                        row: cell.position.row,
+                        col: cell.position.col
+                    });
                 }
             });
 
@@ -119,21 +155,8 @@ function updateCell($targetCell, cellData) {
     }
 }
 
-function makeAjaxCall(type, action, row, col, callback) {
-    $.ajax({
-        type: type,
-        url: 'game/json',
-        data: JSON.stringify({
-            action: action,
-            row: row || 0,
-            col: col || 0
-        }),
-        complete: callback,
-        contentType: 'application/json'
-    });
-}
-
 function resetClasses() {
+    $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
     $grid.add('#body-wrapper').add($nav).removeClass('gameover');
     $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag falling');
 }
@@ -145,16 +168,21 @@ function restartGame() {
         removeClassAfter($nav, 'slideInDown', 1000);
     }
 
-    makeAjaxCall('POST', 'restart', null, null, updateData);
-    //updateGrid();
+    sendStringToWebSocket({
+        action: 'restart',
+        row: null,
+        col: null
+    });
+
     resetClasses();
-    $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
+    // TODO warum hier? $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
 }
 
 function setGlobalVariables() {
     $grid = $('#grid');
     $nav = $('.navbar');
-    explosionSound = $ ('#explosion-sound').get(0);
+    explosionSound = $('#explosion-sound').get(0);
+    $wsLog = $('#wsLog');
 }
 
 function removeClassAfter($target, classname, milliseconds) {
