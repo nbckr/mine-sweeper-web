@@ -17,6 +17,7 @@ import views.html.*;
  */
 public class HomeController extends Controller {
 
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
     private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
     private static TUI tui = new TUI(controller);
@@ -59,5 +60,48 @@ public class HomeController extends Controller {
 
     public Result about() {
         return ok(about.render());
+    }
+
+
+    public Result getJson() {
+
+        final JsonObject data = new JsonObject();
+        data.add("grid", gson.toJsonTree(controller.getGrid().getCellsAsRows()));
+        data.add("state", gson.toJsonTree(controller.getState()));
+
+        return ok(gson.toJson(data)).as("text/json");
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result postJson() {
+
+        JsonNode json = request().body().asJson();
+        String action = json.findPath("action").textValue();
+        if (action == null) {
+            return badRequest("Missing parameter [action]");
+        } else {
+
+            final int row = json.findPath("row").intValue();
+            final int col = json.findPath("col").intValue();
+
+            switch (action) {
+
+                case "reveal":
+                    controller.revealCell(row, col);
+                    return ok();
+
+                case "flag":
+                    controller.toggleFlag(row, col);
+                    return ok();
+
+                case "restart":
+                    controller.startNewGame();
+                    return created();
+
+                default:
+                    return badRequest("Unknown JSON game action");
+            }
+
+        }
     }
 }
