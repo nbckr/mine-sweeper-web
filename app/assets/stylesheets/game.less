@@ -70,9 +70,9 @@
   }
   &.mine {
     background-color: @red;
-
     .fa-but-larger;
-
+  }
+  &.vibrate {
     // copied from hvr-buzz
     -webkit-transform: perspective(1px) translateZ(0) scale(1.2, 1.2);
     transform: perspective(1px) translateZ(0) scale(1.2, 1.2);
@@ -86,7 +86,6 @@
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
   }
-
   &.flagged {
     .fa-but-larger;
   }
@@ -106,4 +105,23 @@
 
 #settings-button {
   .fa-but-much-larger;
+}
+
+#choose-difficulty, #choose-size {
+  div {
+    display: inline-block;
+    vertical-align: middle;
+
+    img {
+      margin: 0 auto;
+      display: block;
+      width: 50%;
+    }
+    small {
+      display: block;
+      text-align: center;
+      margin: 10px 0 0 0;
+    }
+  }
+
 }

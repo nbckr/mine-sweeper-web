@@ -43,26 +43,24 @@ public class GridObserver implements IObserver {
                 e.printStackTrace();
             }
 
-            String action = json.findPath("action").textValue();
-			if (action == null) {
-                System.out.println("Action field missing from JSON");
-            } else {
-				final int row = json.findPath("row").intValue();
-				final int col = json.findPath("col").intValue();
-
+            try {
+				String action = json.findPath("action").textValue();
 				switch (action) {
 					case "reveal":
-						controller.revealCell(row, col);
-                        break;
-					case "flag":
-						controller.toggleFlag(row, col);
+						controller.revealCell(json.findPath("row").intValue(), json.findPath("col").intValue());
 						break;
-					case "restart":
-						controller.startNewGame();
+					case "flag":
+						controller.toggleFlag(json.findPath("row").intValue(), json.findPath("col").intValue());
+						break;
+					case "start":
+						String difficulty = json.findPath("difficulty").textValue();
+						controller.startNewGame(json.findPath("size").textValue(), difficulty);
 						break;
 					default:
-                        System.out.println("Unknown action in JSON");
+						System.out.println("Unknown action in JSON");
 				}
+			} catch (Exception e) {
+				System.err.println("Error while processing WebSockets data:\n" + json + "\nOriginal exception:\n" + e.getMessage());
 			}
         });
 	}
