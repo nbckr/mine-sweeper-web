@@ -3,11 +3,12 @@
 @main("Welcome to MineSweeper!") {
 
     <audio id="explosion-sound" src="@routes.Assets.versioned("sounds/explosion.mp3")" type="audio/mp3"></audio>
+    <audio id="tada-sound" src="@routes.Assets.versioned("sounds/tada.mp3")" type="audio/mp3"></audio>
 
     <div class="container">
 
-        <p><a class="btn btn-primary btn-lg" href="#" role="button" id="start-button" data-toggle="modal" data-target="#newGameModal">Start new game...</a>
-            <a class="btn btn-primary btn-lg fa fa-cog" href="#" role="button" id="settings-button" data-toggle="modal" data-target="#newGameModal"></a></p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">Start new game...</a>
+            <a class="btn btn-primary btn-lg fa fa-cog pull-right" href="#" role="button" id="settings-button"></a></p>
 
             <!-- Modal -->
         <div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModal">
@@ -22,7 +23,6 @@
                     <div class="modal-body">
 
                         <form>
-
                             <div class="form-group" id="choose-size">
                                 <h3>Choose grid size</h3>
                                 <p class="form-text">How'd you like your grid today? Feeling like a giant?</p>
@@ -54,7 +54,7 @@
 
                             <div class="form-group" id="choose-difficulty">
                                 <h3>Choose difficulty</h3>
-                                <p class="form-text">Don't be a baby, show off your mad skillz!</p>
+                                <p class="form-text">How many mines? Don't be a baby, show off your mad skillz!</p>
 
                                 <div class="row">
                                     <div class="col-sm-4">
@@ -80,13 +80,12 @@
                                     </div>
                                 </div>
                             </div>
-
                         </form>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Hell no!</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-btn">Aww yeah!</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-button">Aww yeah!</button>
                     </div>
                 </div>
             </div>
@@ -98,7 +97,7 @@
             <div id="grid"></div>
         </div>
 
-        <div id="wsLog" style="display: block;"></div>
+        <div id="wsLog" style="display: none;"></div>
 
         <script src="@routes.Assets.versioned("javascripts/game.js")" type="text/javascript"></script>
 
