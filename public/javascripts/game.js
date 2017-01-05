@@ -1,6 +1,9 @@
 var gridData;
 var stateData;
 
+var size = "medium";
+var difficulty = "intermediate";
+
 var $grid;
 var $nav;
 var explosionSound;
@@ -12,20 +15,17 @@ $(function () {
 
     setGlobalVariables();
 
-    connectToWebSocket(restartGame);
+    connectToWebSocket();
 
-    $('#start-button').on('click', function () {
+    $('#start-btn').on('click', function () {
 
+        // store chosen values in global vars
+        size = $('input[name=size]').filter(':checked').val();
+        difficulty = $('input[name=difficulty]').filter(':checked').val();
+
+        // animate and start
         $grid.addClass('zoomOutRight');
-        setTimeout(restartGame, 1000);
-
-        //$grid.addClass('zoomInLeft');
-        //$grid.removeClass('zoomOutRight zoomInLeft');
-
-    });
-
-    $('#settings-button').on('click', function () {
-
+        setTimeout(startGame, 1000);
     });
 
     // Prevent context menu
@@ -34,18 +34,17 @@ $(function () {
     });
 });
 
-function connectToWebSocket(callbackAfterOpen) {
+function connectToWebSocket() {
 
     webSocket = new WebSocket("ws://localhost:9000/socket");
     logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (ready)');
 
     webSocket.onopen = function () {
         logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (open)');
-        restartGame();
+        startGame();
     };
 
     webSocket.onmessage = function (message) {
-
         var messageAsJson = JSON.parse(message.data);
         updateData(messageAsJson);
     };
@@ -53,6 +52,10 @@ function connectToWebSocket(callbackAfterOpen) {
     webSocket.onclose = function () {
         logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (Closed)');
     };
+
+    webSocket.onerror = function (err) {
+        logWebSocketConnection('Socket Error: ' + err);
+    }
 }
 
 function logWebSocketConnection(message) {
@@ -71,18 +74,17 @@ function updateData(messageAsJson) {
     gridData = messageAsJson.grid;
     stateData = messageAsJson.state;
 
-    if (!$grid || $grid.children().length == 0) {
+    if (stateData === 'NEW_GAME' || !$grid || $grid.children().length == 0) {
+        console.log($grid);
         generateGrid();
     } else {
         updateGrid();
     }
-
-    if (stateData === 'NEW_GAME') {
-        resetClasses();
-    }
 }
 
 function generateGrid() {
+
+    resetClasses();
 
     gridData.forEach(function (row) {
 
@@ -136,13 +138,16 @@ function updateGrid() {
 
 function updateCell($targetCell, cellData) {
 
+    if (cellData.hasMine) {
+        $targetCell.addClass('danger');
+    }
+
     if (cellData.isRevealed) {
         $targetCell.text(cellData.surroundingMines).removeClass('flagged fa fa-flag').addClass('revealed surrounding-' + cellData.surroundingMines);
 
         // GAME OVER
         if (cellData.hasMine) {
-            playExplosionSound();
-            explodePage($targetCell);
+            gameOver($targetCell);
         }
     }
 
@@ -156,12 +161,13 @@ function updateCell($targetCell, cellData) {
 }
 
 function resetClasses() {
+    $grid.empty();
     $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
+    removeClassAfter($grid, 'zoomInLeft', 1000);
     $grid.add('#body-wrapper').add($nav).removeClass('gameover');
-    $grid.children().children().removeClass('revealed flagged mine surrounding-0 surrounding-1 surrounding-2 surrounding-3 surrounding-4 surrounding-5 surrounding-6 surrounding-7 surrounding-8 fa fa-bomb fa-flag falling');
 }
 
-function restartGame() {
+function startGame() {
 
     if ($nav.hasClass('gameover')) {
         $nav.addClass('slideInDown');
@@ -169,13 +175,17 @@ function restartGame() {
     }
 
     sendStringToWebSocket({
-        action: 'restart',
-        row: null,
-        col: null
+        action: 'start',
+        size: size,
+        difficulty: difficulty
     });
+}
 
-    resetClasses();
-    // TODO warum hier? $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
+function gameOver(triggerCell) {
+    playExplosionSound();
+    explodePage(triggerCell);
+    // disable further moves
+    $('.cell').off();
 }
 
 function setGlobalVariables() {
@@ -186,12 +196,15 @@ function setGlobalVariables() {
 }
 
 function removeClassAfter($target, classname, milliseconds) {
-    setTimeout($target.removeClass.bind(null, classname), milliseconds);
+    setTimeout(function() {
+        $target.removeClass(classname);
+    }, milliseconds);
 }
 
-function explodePage(mineCell) {
-    mineCell.text('').removeClass('fa-flag').addClass('mine fa fa-bomb');
+function explodePage(triggerCell) {
+    triggerCell.text('').removeClass('fa-flag').addClass('mine vibrate fa fa-bomb');
     $grid.add('#body-wrapper').add($nav).addClass('gameover');
+    $grid.children().children('.danger').not('.revealed').addClass('revealed mine fa fa-bomb');
     $grid.children().children().not('.revealed').addClass('falling');
 }
 
