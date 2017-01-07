@@ -1,4 +1,6 @@
-@(tuiString: String)
+@(profileList: java.util.List[org.pac4j.core.profile.CommonProfile])
+@import scala.collection.JavaConverters._
+@profiles() = { @profileList.toList }
 
 @main("Welcome to MineSweeper!") {
 
@@ -95,6 +97,12 @@
 
         <div id="game" class="center-block">
             <div id="grid"></div>
+        </div>
+
+        <div>
+            <p>
+                Schau an: @profiles
+            </p>
         </div>
 
         <div id="wsLog" style="display: none;"></div>

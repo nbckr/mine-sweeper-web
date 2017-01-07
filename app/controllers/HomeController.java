@@ -5,10 +5,19 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import de.htwg.se.minesweeper.aview.tui.TUI;
 import models.GridObserver;
+import org.pac4j.core.config.Config;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.ProfileManager;
+import org.pac4j.play.PlayWebContext;
+import org.pac4j.play.java.Secure;
+import org.pac4j.play.store.PlaySessionStore;
 import play.mvc.*;
 import views.html.*;
+
+import java.util.List;
 
 
 /**
@@ -17,10 +26,22 @@ import views.html.*;
  */
 public class HomeController extends Controller {
 
+    @Inject
+    private Config config;
+
+    @Inject
+    private PlaySessionStore playSessionStore;
+
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
     private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
     private static TUI tui = new TUI(controller);
+
+    private List<CommonProfile> getProfiles() {
+        final PlayWebContext context = new PlayWebContext(ctx(), playSessionStore);
+        final ProfileManager<CommonProfile> profileManager = new ProfileManager(context);
+        return profileManager.getAll(true);
+    }
 
     public LegacyWebSocket<String> connectWebSocket() {
         return new LegacyWebSocket<String>() {
@@ -31,17 +52,18 @@ public class HomeController extends Controller {
         };
     }
 
-
+    @Secure(clients = "Google2Client")
     public Result game() {
-        return processCommand("h");
+        return ok(views.html.game.render(getProfiles()));
     }
+
 
     public Result processCommand(String command) {
 
         tui.processInput(command);
 
         String tuiOutput = tui.printTUIAsString();
-        return ok(views.html.game.render(tuiOutput));
+        return null; //return ok(views.html.game.render(tuiOutput));
     }
 
     /**
@@ -94,8 +116,8 @@ public class HomeController extends Controller {
                     controller.toggleFlag(row, col);
                     return ok();
 
-                case "restart":
-                    controller.startNewGame();
+                case "start":
+                    controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
                     return created();
 
                 default:

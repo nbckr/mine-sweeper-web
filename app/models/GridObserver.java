@@ -53,8 +53,7 @@ public class GridObserver implements IObserver {
 						controller.toggleFlag(json.findPath("row").intValue(), json.findPath("col").intValue());
 						break;
 					case "start":
-						String difficulty = json.findPath("difficulty").textValue();
-						controller.startNewGame(json.findPath("size").textValue(), difficulty);
+						controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
 						break;
 					default:
 						System.out.println("Unknown action in JSON");
