@@ -54,7 +54,7 @@ public class HomeController extends Controller {
 
     @Secure(clients = "Google2Client")
     public Result game() {
-        return ok(views.html.game.render(getProfiles()));
+        return ok(views.html.game.render(getProfiles().get(0)));
     }
 
 

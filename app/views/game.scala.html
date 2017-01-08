@@ -1,6 +1,4 @@
-@(profileList: java.util.List[org.pac4j.core.profile.CommonProfile])
-@import scala.collection.JavaConverters._
-@profiles() = { @profileList.toList }
+@(profile: org.pac4j.core.profile.CommonProfile)
 
 @main("Welcome to MineSweeper!") {
 
@@ -9,7 +7,8 @@
 
     <div class="container">
 
-        <p><a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">Start new game...</a>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
+            Start new game...</a>
             <a class="btn btn-primary btn-lg fa fa-cog pull-right" href="#" role="button" id="settings-button"></a></p>
 
             <!-- Modal -->
@@ -100,9 +99,8 @@
         </div>
 
         <div>
-            <p>
-                Schau an: @profiles
-            </p>
+            <img src="@profile.getPictureUrl()" alt="user profile pic">
+            <p>@profile.getDisplayName()</p>
         </div>
 
         <div id="wsLog" style="display: none;"></div>
