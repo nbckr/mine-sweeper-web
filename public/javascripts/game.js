@@ -49,7 +49,7 @@ $(function () {
 });
 
 function connectToWebSocket() {
-    webSocket = new WebSocket("ws://localhost:9000/socket");
+    webSocket = new WebSocket("ws://http://minesweeper-htwg.herokuapp.com:5000/socket");
     logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (ready)');
 
     webSocket.onopen = function () {
