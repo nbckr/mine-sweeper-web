@@ -6,13 +6,16 @@
     <audio id="tada-sound" src="@routes.Assets.versioned("sounds/tada.mp3")" type="audio/mp3"></audio>
 
     <div class="container">
-        <div id="profile">
-            <img src="@profile.getPictureUrl()" alt="user profile pic">
-            <p>@profile.getDisplayName()</p>
+        <div id="gameMenu">
+            <div id="profile">
+                <img src="@profile.getPictureUrl()" alt="user profile pic">
+                <p>@profile.getDisplayName()</p>
+            </div>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
+                Start new game...</a>
+                <a class="btn btn-primary btn-lg fa fa-cog pull-right" href="#" role="button" id="settings-button"></a>
+            </p>
         </div>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
-            Start new game...</a>
-            <a class="btn btn-primary btn-lg fa fa-cog pull-right" href="#" role="button" id="settings-button"></a></p>
 
             <!-- Modal -->
         <div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModal">
