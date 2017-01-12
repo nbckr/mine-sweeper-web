@@ -1,12 +1,62 @@
 #body-wrapper {
-  transition: background-color 750ms linear;
+  //transition: background-color 750ms linear;
   &.gameover {
-    background-color: darkred;
+    //background: #94050a; /* Old browsers */
+    //background: -moz-linear-gradient(top, #94050a 0%, #540405 100%); /* FF3.6-15 */
+    //background: -webkit-linear-gradient(top, #94050a 0%,#540405 100%); /* Chrome10-25,Safari5.1-6 */
+    //background: linear-gradient(to bottom, #94050a 0%,#540405 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(358deg, #c0392b, #ffffff);
+    background-size: 400% 400%;
+
+    -webkit-animation: flickerRed 1s ease infinite;
+    -moz-animation: flickerRed 1s ease infinite;
+    animation: flickerRed 1s ease infinite;
   }
   &.gamewon {
-    background-color: greenyellow;
+    background: linear-gradient(181deg, #ffffff, #ffffff, #8bc34a, #cddc39, #ffeb3b, #30f5c2);
+    background-size: 1200% 1200%;
+
+    -webkit-animation: flickerGreen 8s ease infinite;
+    -moz-animation: flickerGreen 8s ease infinite;
+    animation: flickerGreen 8s ease infinite;
+
   }
 }
+
+
+@-webkit-keyframes flickerRed {
+  0%{background-position:83% 0%}
+  50%{background-position:18% 100%}
+  100%{background-position:83% 0%}
+}
+@-moz-keyframes flickerRed {
+  0%{background-position:83% 0%}
+  50%{background-position:18% 100%}
+  100%{background-position:83% 0%}
+}
+@keyframes flickerRed {
+  0%{background-position:83% 0%}
+  50%{background-position:18% 100%}
+  100%{background-position:83% 0%}
+}
+
+@-webkit-keyframes flickerGreen {
+  0%{background-position:50% 0%}
+  50%{background-position:50% 100%}
+  100%{background-position:50% 0%}
+}
+@-moz-keyframes flickerGreen {
+  0%{background-position:50% 0%}
+  50%{background-position:50% 100%}
+  100%{background-position:50% 0%}
+}
+@keyframes flickerGreen {
+  0%{background-position:50% 0%}
+  50%{background-position:50% 100%}
+  100%{background-position:50% 0%}
+}
+
+
 
 #grid {
   //background-color: #0F9E5E;
@@ -28,10 +78,6 @@ nav {
     -webkit-animation-fill-mode: forwards;
   }
 }
-
-
-
-
 
 
 // https://premiumcoding.com/css3-tricks-falling-leaves-css/
@@ -83,7 +129,6 @@ nav {
   -webkit-animation-delay: 0.7s;
   -moz-animation-delay: 0.7s;
 }
-
 
 @-webkit-keyframes falling {
   0% {
@@ -283,4 +328,49 @@ nav {
   animation-iteration-count: 1;
 
   -webkit-animation-fill-mode: forwards;
+}
+
+@-moz-keyframes spinn { 100% { -moz-transform: rotate(1140deg); } }
+@-webkit-keyframes spinn { 100% { -webkit-transform: rotate(1140deg); } }
+@keyframes spinn { 100% { -webkit-transform: rotate(1140deg); transform:rotate(1140deg); } }
+
+.spin {
+  -webkit-animation-name: spinn;
+  animation-name: spinn;
+
+  animation-duration: 1.25s;
+  animation-iteration-count: 1;
+
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+
+@-webkit-keyframes rollOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0) rotate3d(0, 0, 1, 120deg);
+    transform: translate3d(100%, 0, 0) rotate3d(0, 0, 1, 120deg);
+  }
+}
+
+@keyframes rollOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0) rotate3d(0, 0, 1, 120deg);
+    transform: translate3d(100%, 0, 0) rotate3d(0, 0, 1, 120deg);
+  }
+}
+
+.rollOut {
+  -webkit-animation-name: rollOut;
+  animation-name: rollOut;
 }

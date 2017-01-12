@@ -1,13 +1,14 @@
 var gridData;
 var stateData;
 
-var size = "medium";
-var difficulty = "intermediate";
+var size = "small";
+var difficulty = "beginner";
 var devMode = false;
 
 var $grid;
 var $nav;
 var $wsLog;
+var $profile;
 var webSocket;
 
 // default values
@@ -189,6 +190,7 @@ function resetClasses() {
     $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
     removeClassAfter($grid, 'zoomInLeft', animationTime);
     $grid.add('#body-wrapper').add($nav).removeClass('gameover gamewon');
+    $profile.find('img').removeClass('spin');
     devMode = false;
 }
 
@@ -226,6 +228,7 @@ function setGlobalVariables() {
     $grid = $('#grid');
     $nav = $('.navbar');
     $wsLog = $('#wsLog');
+    $profile = $('#profile');
 }
 
 function removeClassAfter($target, classname, milliseconds) {
@@ -238,6 +241,7 @@ function explodePage() {
     $grid.add('#body-wrapper').add($nav).addClass('gameover');
     $grid.children().children('.danger').not('.revealed').addClass('revealed mine fa fa-bomb');
     $grid.children().children().not('.revealed').addClass('falling');
+    $profile.find('img').addClass('spin');
 }
 function celebratePage() {
     $grid.add('#body-wrapper').add($nav).addClass('gamewon');
