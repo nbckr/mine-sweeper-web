@@ -38,9 +38,11 @@ $(function () {
     $('#show-modal').on('click', function () {
         if(device === "phone"){
             $('#choose-size').hide();
+            $("#mobileMessage").show();
         }
         if(device === "tablet"){
             $('#select-sizse-large').hide();
+            $("#mobileMessage").show();
         }
     });
     // Start new game from the modal
