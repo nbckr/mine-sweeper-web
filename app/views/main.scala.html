@@ -24,7 +24,7 @@
 
     </head>
     <body>
-        <div id="body-wrapper">
+        <div id="body-wrapper" class="colored">
             @* And here's where we render the `Html` object containing
             * the page content. *@
         <nav class="navbar navbar-inverse">
@@ -38,24 +38,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">MineSweeper</a>
+                    <a class="navbar-brand" href="/"><em>Plain Old</em> MineSweeper</a>
                 </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-
-                        <li><a href='@routes.HomeController.game'>Let's play!</a></li>
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More... <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href='@routes.HomeController.instructions'>Instructions</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href='@routes.HomeController.about'>About this page</a></li>
-                            </ul>
-                        </li>
-
+                        <li><a href='@routes.HomeController.game'><b>Game</b></a></li>
+                        <li><a href='@routes.HomeController.instructions'>Instructions</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href='@routes.HomeController.about'>About</a></li>
                     </ul>
                 </div>
                     <!-- /.navbar-collapse -->
