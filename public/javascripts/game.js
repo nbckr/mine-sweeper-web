@@ -28,6 +28,11 @@ $(function () {
 
     connectToWebSocket();
 
+    // Make alerts closeable
+    $("[data-hide]").on("click", function () {
+        $("." + $(this).attr("data-hide")).slideUp();
+    });
+
     if(isMobile && (windowsWidth < 680)){
         device = "phone"
     }
@@ -95,7 +100,7 @@ function connectToWebSocket() {
 
     webSocket.onopen = function () {
         logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (open)');
-        startGame();
+        sendStringToWebSocket({action: 'touch'});
     };
 
     webSocket.onmessage = function (message) {
@@ -223,6 +228,7 @@ function resetClasses() {
     $grid.add('#body-wrapper').add($nav).removeClass('gameover gamewon');
     $profile.find('img').removeClass('spin');
     devMode = false;
+    $('.alert').slideUp();
 }
 
 function startGame() {
@@ -242,12 +248,14 @@ function gameOver() {
     playExplosionSound();
     explodePage();
     disableGrid();
+    $('#gameover-alert').slideDown();
 }
 
 function gameWon() {
     playTadaSound();
     celebratePage();
     disableGrid();
+    $('#gamewon-alert').slideDown();
 }
 
 function disableGrid() {
@@ -263,7 +271,7 @@ function setGlobalVariables() {
 }
 
 function removeClassAfter($target, classname, milliseconds) {
-    setTimeout(function() {
+    setTimeout(function () {
         $target.removeClass(classname);
     }, milliseconds);
 }
@@ -274,6 +282,7 @@ function explodePage() {
     $grid.children().children().not('.revealed').addClass('falling');
     $profile.find('img').addClass('spin');
 }
+
 function celebratePage() {
     $grid.add('#body-wrapper').add($nav).addClass('gamewon');
     $('.danger').addClass('fa fa-bomb falling');

@@ -94,12 +94,36 @@
                     <p id="mobileMessage">If you play this game on the desktop you can choose three different sizes.</p>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Hell no!</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-button">Aww yeah!</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-button" autofocus>Aww yeah!</button>
                     </div>
                 </div>
             </div>
         </div>
             <!-- end Modal -->
+
+        <div class="media alert alert-danger alert-dismissable" role="alert" id="gameover-alert" hidden>
+            <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="media-left">
+                <img class="media-object icon-medium" src="@routes.Assets.versioned("images/tombstone-red.svg")">
+            </div>
+            <div class="media-body">
+                <h3 class="media-heading">Whooops. You're dead.</h3>
+                <p>Hate to say we told you so. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
+                    Don't cry, try again.</a></p>
+            </div>
+        </div>
+
+        <div class="media alert alert-success alert-dismissable" role="alert" id="gamewon-alert" hidden>
+            <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="media-left">
+                <img class="media-object icon-medium" src="@routes.Assets.versioned("images/medal-green.svg")">
+            </div>
+            <div class="media-body">
+                <h3 class="media-heading">You won and it was really awesome!</h3>
+                <p>We always knew you could do it. Huge success. Tremenduous. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
+                    Okay enough of it now, play again.</a></p>
+            </div>
+        </div>
 
 
         <div id="game" class="text-center">

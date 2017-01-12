@@ -1,27 +1,29 @@
 @*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
+* This template takes a single argument, a String containing a
+* message to display.
+*@
 @(message: String)
-
 @*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page.
+*@
 @main("Minesweeper Web") {
-
     @*
-     * Get an `Html` object by calling the built-in Play welcome
-     * template and passing a `String` message.
-     * @play20.welcome(message, style = "Java")
-     *@
-
+    * Get an `Html` object by calling the built-in Play welcome
+    * template and passing a `String` message.
+    * @play20.welcome(message, style = "Java")
+    *@
     <div class="jumbotron">
-        <div class="container">
-            <h1>Welcome to MineSweeper!</h1>
-            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-            <p><a class="btn btn-primary btn-lg" href='@routes.HomeController.game' role="button">Go ahead and play!</a></p>
+        <div class="container text-center">
+            <div>
+                <p><img src="@routes.Assets.versioned("images/poison.svg")" class="icon-large"></p>
+                <h1>Wanna play a game?</h1>
+                <p>Just you and an array of squares right in front of you. Some of them bare mines, some don't. Touch the wrong one: Instant Death.</p>
+                <p>That's pretty much it. Sounds fun? Let's jump right in.</p>
+                <small>(Don't say we didn't warn you)</small>
+                <p><a class="btn btn-primary btn-lg" href='@routes.HomeController.game' role="button">
+                    Let's play.</a></p>
+            </div>
         </div>
-    </div>
 }
