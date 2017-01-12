@@ -53,7 +53,7 @@ function connectToWebSocket() {
     var baseUrl = window.location.host;
     var port = location.port;
 
-    if(port === 9000){
+    if(port === "9000"){
         webSocket = new WebSocket("ws:"+baseUrl+"/socket");
     }
     else{
