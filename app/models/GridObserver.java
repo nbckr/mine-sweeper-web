@@ -52,6 +52,9 @@ public class GridObserver implements IObserver {
 					case "flag":
 						controller.toggleFlag(json.findPath("row").intValue(), json.findPath("col").intValue());
 						break;
+					case "touch":
+						controller.touch();
+						break;
 					case "start":
 						controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
 						break;
