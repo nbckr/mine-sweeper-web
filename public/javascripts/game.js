@@ -49,7 +49,16 @@ $(function () {
 });
 
 function connectToWebSocket() {
-    webSocket = new WebSocket("ws://localhost:9000/socket");
+    var baseUrl = window.location.host;
+    var port = location.port;
+
+    if(port === 9000){
+        webSocket = new WebSocket("ws:"+baseUrl+"/socket");
+    }
+    else{
+        webSocket = new WebSocket("wss:"+baseUrl+"/socket");
+    }
+    
     logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (ready)');
 
     webSocket.onopen = function () {
