@@ -31,10 +31,16 @@ $(function () {
     if(isMobile && (windowsWidth < 680)){
         device = "phone"
     }
+    if(isMobile && (windowsWidth >= 680)){
+        device = "tablet"
+    }
 
     $('#show-modal').on('click', function () {
         if(device === "phone"){
             $('#choose-size').hide();
+        }
+        if(device === "tablet"){
+            $('#select-sizse-large').hide();
         }
     });
     // Start new game from the modal
