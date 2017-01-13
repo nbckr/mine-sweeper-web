@@ -1,3 +1,5 @@
+
+
 @*
 * This template is called from the `index` template. This template
 * handles the rendering of the page header and body tags. It takes
@@ -5,6 +7,10 @@
 * object to insert into the body of the page.
 *@
 @(title: String)(content: Html)
+
+@activeLink(currentPath:String) = @{
+    if(request.path.equals(currentPath)) "active"
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,16 +44,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/"><em>Plain Old</em> MineSweeper</a>
+                    <a class="navbar-brand @activeLink("")" href="/"><em>Plain Old</em> MineSweeper</a>
                 </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li><a href='@routes.HomeController.game'><b>Game</b></a></li>
-                        <li><a href='@routes.HomeController.instructions'>Instructions</a></li>
+                        <li class="@activeLink("/game")"><a href='@routes.HomeController.game'>Game</a></li>
+                        <li class="@activeLink("/instructions")"><a href='@routes.HomeController.instructions'>Instructions</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href='@routes.HomeController.about'>About</a></li>
+                        <li class="@activeLink("/about")"><a href='@routes.HomeController.about'>About</a></li>
                     </ul>
                 </div>
                     <!-- /.navbar-collapse -->
