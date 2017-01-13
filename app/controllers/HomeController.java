@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import de.htwg.se.minesweeper.Minesweeper;
+import de.htwg.se.minesweeper.aview.gui.GUI;
 import de.htwg.se.minesweeper.aview.tui.TUI;
 import models.GridObserver;
 import org.pac4j.core.config.Config;
@@ -18,6 +20,7 @@ import play.mvc.*;
 import views.html.*;
 
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -25,6 +28,8 @@ import java.util.List;
  * to the application's home page.
  */
 public class HomeController extends Controller {
+
+    private static final boolean SHOW_GUI_TUI = true;
 
     @Inject
     private Config config;
@@ -35,7 +40,15 @@ public class HomeController extends Controller {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
     private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
-    private static TUI tui = new TUI(controller);
+
+    public HomeController() {
+
+        // If wished so, TUI and GUI run asynchronously for demonstration purposes
+        if (SHOW_GUI_TUI) {
+            (new Thread(new TuiThread())).start();
+            (new Thread(new GuiThread())).start();
+        }
+    }
 
     private List<CommonProfile> getProfiles() {
         final PlayWebContext context = new PlayWebContext(ctx(), playSessionStore);
@@ -55,15 +68,6 @@ public class HomeController extends Controller {
     @Secure(clients = "Google2Client")
     public Result game() {
         return ok(views.html.game.render(getProfiles().get(0)));
-    }
-
-
-    public Result processCommand(String command) {
-
-        tui.processInput(command);
-
-        String tuiOutput = tui.printTUIAsString();
-        return null; //return ok(views.html.game.render(tuiOutput));
     }
 
     /**
@@ -124,6 +128,33 @@ public class HomeController extends Controller {
                     return badRequest("Unknown JSON game action");
             }
 
+        }
+    }
+
+
+    public class TuiThread implements Runnable {
+
+        @Override
+        public void run() {
+            TUI tui = new TUI(controller);
+
+            // We can't process input as activator run doesn't listen to input, but we can print the TUI nevertheless
+
+            //boolean loop = true;
+            //Scanner scanner = new Scanner(System.in);
+            //while (loop) {
+            //    loop = tui.processInput(scanner.next());
+            //    System.out.println("HALLO");
+            //    System.err.println("WELT");
+            //}
+        }
+    }
+
+    public class GuiThread implements Runnable {
+
+        @Override
+        public void run() {
+            GUI gui = new GUI(controller);
         }
     }
 }

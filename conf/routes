@@ -9,7 +9,6 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # Site
 GET     /                           controllers.HomeController.index
 GET     /game                       controllers.HomeController.game
-GET     /game/tui/play/:command     controllers.HomeController.processCommand(command: String)
 GET     /instructions               controllers.HomeController.instructions()
 GET     /about                      controllers.HomeController.about()
 
