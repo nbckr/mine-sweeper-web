@@ -6,6 +6,7 @@ var difficulty = "beginner";
 var devMode = false;
 var muteSound = false;
 
+var $bodywrapper;
 var $grid;
 var $nav;
 var $wsLog;
@@ -247,7 +248,7 @@ function resetClasses() {
     $grid.empty();
     $grid.removeClass('zoomOutRight').addClass('zoomInLeft');
     removeClassAfter($grid, 'zoomInLeft', animationTime);
-    $grid.add('#body-wrapper').add($nav).removeClass('gameover gamewon');
+    $grid.add($bodywrapper).add($nav).add($('#game')).removeClass('gameover gamewon');
     $profile.find('img').removeClass('spin');
     devMode = false;
     $('.alert').slideUp();
@@ -286,6 +287,7 @@ function disableGrid() {
 }
 
 function setGlobalVariables() {
+    $bodywrapper = $('#body-wrapper');
     $grid = $('#grid');
     $nav = $('.navbar');
     $wsLog = $('#wsLog');
@@ -299,14 +301,18 @@ function removeClassAfter($target, classname, milliseconds) {
 }
 
 function explodePage() {
-    $grid.add('#body-wrapper').add($nav).addClass('gameover');
+    $grid.add($bodywrapper).add($nav).add($('#game')).addClass('gameover');
+    $grid.add($bodywrapper).add($nav).add($('#game')).addClass('gameover');
     $grid.children().children('.danger').not('.revealed').addClass('revealed mine fa fa-bomb');
     $grid.children().children().not('.revealed').addClass('falling');
     $profile.find('img').addClass('spin');
+
+    // For animation, we hide overflow-y, so user could lose access to 'New Game' button unless we scroll up
+    $bodywrapper.scrollTop(0,0);
 }
 
 function celebratePage() {
-    $grid.add('#body-wrapper').add($nav).addClass('gamewon');
+    $grid.add($bodywrapper).add($nav).addClass('gamewon');
     $('.danger').addClass('fa fa-bomb falling');
 }
 

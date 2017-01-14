@@ -8,7 +8,11 @@
 }
 
 #game{
+  // enabling this causes a vertical scroll bar to pop up at explosion animation...
   //overflow-x: scroll;
+  //&.gameover {
+  //  overflow: hidden;;
+  //}
 }
 
 #grid{
@@ -17,7 +21,7 @@
   padding: 0.5em;
   border-radius: 0.9em;
   //overflow:hidden;
-  white-space:nowrap;
+  white-space: nowrap;
 }
 
 .row {
@@ -30,7 +34,7 @@
   background: @light-grey;
   cursor: pointer;
   text-decoration: none;
-  border-radius: 0.4vw;
+  border-radius: .15em;
 
   display: inline-flex !important;
   justify-content: center;
@@ -38,11 +42,10 @@
   align-content: center;
 
   transition: background-color 400ms linear;
-  // TODO transition content
 
   width: 40px;
   height: 40px;
-  font-size: 2.5vw;
+  font-size: 2em;
   text-align: center;
   margin: 3px;
 
@@ -155,4 +158,11 @@ div#gameMenu {
   background-color: darkgrey;
   outline: 10px solid slategrey;
   border-radius: 10px;
+}
+
+@media screen and (min-width: 992px) {
+  .alert {
+    max-width: 70%;
+    margin: 1.45em auto;
+  }
 }

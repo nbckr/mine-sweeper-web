@@ -1,23 +1,48 @@
 @import "lib/bootstrap/less/bootstrap";
-
-//@import "_tui";
 @import "game";
 @import "sfx";
 
-body {
-  min-width: 400px;;;
+@sm1:    ~"only screen and (max-width: 700px)";
+@sm2:    ~"only screen and (max-width: 600px)";
+@sm3:    ~"only screen and (max-width: 450px)";
 
+body {
+  min-width: 400px;
+
+  // Fill whole screen
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  left: 0;
+  left: 0;;
 }
+
+// Fix the white bar at the bottom of some devices, having trouble with a 100% sized absolute body
+@media @sm1 {
+  body {
+    margin-bottom: -3em;
+  }
+}
+@media @sm2 {
+  body {
+    margin-bottom: -4em;
+  }
+}
+@media @sm3 {
+  body {
+    margin-bottom: -5em;
+  }
+}
+
+// Basivally same size as body, allows scrolling, except for when the page "explodes" as that causes ugly scrollbars
 #body-wrapper {
   height: 100%;
-  overflow: hidden;
   padding-bottom: 5em;
-  //overflow-y: auto;
+  overflow-y: auto;
+
+  &.gameover {
+    overflow-y: hidden;
+  }
 }
 
 .jumbotron {
