@@ -4,6 +4,7 @@ var stateData;
 var size = "small";
 var difficulty = "beginner";
 var devMode = false;
+var muteSound = false;
 
 var $grid;
 var $nav;
@@ -67,15 +68,36 @@ $(function () {
         setTimeout(startGame, animationTime);
     });
 
-    // Activate dev mode
-    $('#settings-button').on('click', function () {
+    // Toggle dev mode
+    var $settingsDevMode = $('#settings-devmode').first();
+    $settingsDevMode.on('click', function () {
         devMode = !devMode;
         if (devMode) {
             $('.danger').addClass('mine');
+            $settingsDevMode.children('.text').text(' Disable Dev Mode');
+            console.log($settingsDevMode);
             $wsLog.fadeIn(animationTime);
         } else {
             $('.danger').not('.revealed').removeClass('mine');
             $wsLog.fadeOut(animationTime);
+            $settingsDevMode.children('.text').text(' Enable Dev Mode');
+        }
+    });
+
+    // Toggle sound
+    var $settingsSound = $('#settings-sound').first();
+    $settingsSound.on('click', function () {
+        muteSound = !muteSound;
+        if (muteSound) {
+            $('audio').each(function(){
+                this.muted = true;
+            });
+            $settingsSound.children('.text').text(' Enable Sound');
+        } else {
+            $('audio').each(function(){
+                this.muted = false;
+            });
+            $settingsSound.children('.text').text(' Disable Sound');
         }
     });
 

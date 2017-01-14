@@ -1,143 +1,155 @@
 @(profile: org.pac4j.core.profile.CommonProfile)
 
-@main("Welcome to MineSweeper!") {
+    @main("Welcome to MineSweeper!") {
 
-    <audio id="explosion-sound" src="@routes.Assets.versioned("sounds/explosion.mp3")" type="audio/mp3"></audio>
-    <audio id="tada-sound" src="@routes.Assets.versioned("sounds/tada.mp3")" type="audio/mp3"></audio>
+        <audio id="explosion-sound" src="@routes.Assets.versioned("sounds/explosion.mp3")" type="audio/mp3"></audio>
+        <audio id="tada-sound" src="@routes.Assets.versioned("sounds/tada.mp3")" type="audio/mp3"></audio>
 
-    <div class="container">
-        <div id="gameMenu">
-            <div id="profile">
-                <img src="@profile.getPictureUrl()" alt="user profile pic">
-                <p>@profile.getDisplayName()</p>
+        <div class="container">
+
+            <div id="gameMenu">
+
+                <div id="profile">
+                    <img src="@profile.getPictureUrl()" alt="user profile pic">
+                    <p>@profile.getDisplayName()</p>
+                </div>
+
+                    <button class="btn btn-primary btn-lg" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
+                        Start new game...</button>
+
+                <div class="dropdown pull-right">
+                    <button class="btn btn-primary dropdown-toggle fa fa-cog" type="button" id="settings-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="settings-sound"><span class="fa fa-volume-up"></span> <span class="text">Disable Sound</span></a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a id="settings-devmode"><span class="fa fa-code"></span> <span class="text">Enable Dev Mode</span></a></li>
+                    </ul>
+                </div>
+
+
             </div>
-            <p>
-                <a class="btn btn-primary btn-lg" href="#" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
-                Start new game...</a>
-                <a class="btn btn-primary btn-lg fa fa-cog pull-right" href="#" role="button" id="settings-button"></a>
-            </p>
-        </div>
 
-            <!-- Modal -->
-        <div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+                <!-- Modal -->
+            <div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
 
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Start new game</h4>
-                    </div>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Start new game</h4>
+                        </div>
 
-                    <div class="modal-body">
+                        <div class="modal-body">
 
-                        <form>
-                            <div class="form-group" id="choose-size">
-                                <h3>Choose grid size</h3>
-                                <p class="form-text">How'd you like your grid today? Feeling like a giant?</p>
+                            <form>
+                                <div class="form-group" id="choose-size">
+                                    <h3>Choose grid size</h3>
+                                    <p class="form-text">How'd you like your grid today? Feeling like a giant?</p>
 
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="size" id="gridSizeRadio1" value="small" checked="checked">
-                                            <div><img src="@routes.Assets.versioned("images/small.svg")" alt="small">
-                                                <small>Small</small></div>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="size" id="gridSizeRadio2" value="medium">
-                                            <div><img src="@routes.Assets.versioned("images/medium.svg")" alt="medium">
-                                                <small>Medium</small></div>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-4" id="select-sizse-large">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="size" id="gridSizeRadio3" value="large">
-                                            <div><img src="@routes.Assets.versioned("images/large.svg")" alt="large">
-                                                <small>Large</small></div>
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="size" id="gridSizeRadio1" value="small" checked="checked">
+                                                <div><img src="@routes.Assets.versioned("images/small.svg")" alt="small">
+                                                    <small>Small</small></div>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="size" id="gridSizeRadio2" value="medium">
+                                                <div><img src="@routes.Assets.versioned("images/medium.svg")" alt="medium">
+                                                    <small>Medium</small></div>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4" id="select-sizse-large">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="size" id="gridSizeRadio3" value="large">
+                                                <div><img src="@routes.Assets.versioned("images/large.svg")" alt="large">
+                                                    <small>Large</small></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group" id="choose-difficulty">
-                                <h3>Choose difficulty</h3>
-                                <p class="form-text">How many mines? Don't be a baby, show off your mad skillz!</p>
+                                <div class="form-group" id="choose-difficulty">
+                                    <h3>Choose difficulty</h3>
+                                    <p class="form-text">How many mines? Don't be a baby, show off your mad skillz!</p>
 
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio1" value="beginner" checked="checked">
-                                            <div><img src="@routes.Assets.versioned("images/beginner.svg")" alt="beginner">
-                                                <small>Beginner</small></div>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio2" value="intermediate">
-                                            <div><img src="@routes.Assets.versioned("images/intermediate.svg")" alt="intermediate">
-                                                <small>Intermediate</small></div>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio3" value="expert">
-                                            <div><img src="@routes.Assets.versioned("images/expert.svg")" alt="expert">
-                                                <small>Expert</small></div>
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio1" value="beginner" checked="checked">
+                                                <div><img src="@routes.Assets.versioned("images/beginner.svg")" alt="beginner">
+                                                    <small>Beginner</small></div>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio2" value="intermediate">
+                                                <div><img src="@routes.Assets.versioned("images/intermediate.svg")" alt="intermediate">
+                                                    <small>Intermediate</small></div>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="difficulty" id="difficultyRadio3" value="expert">
+                                                <div><img src="@routes.Assets.versioned("images/expert.svg")" alt="expert">
+                                                    <small>Expert</small></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
 
-                    </div>
-                    <p id="mobileMessage">If you play this game on the desktop you can choose three different sizes.</p>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Hell no!</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-button" autofocus>Aww yeah!</button>
+                        </div>
+                        <p id="mobileMessage">
+                            If you play this game on the desktop you can choose three different sizes.</p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Hell no!</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="start-button" autofocus>
+                                Aww yeah!</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-            <!-- end Modal -->
+                <!-- end Modal -->
 
-        <div class="media alert alert-danger alert-dismissable" role="alert" id="gameover-alert" hidden>
-            <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <div class="media-left">
-                <img class="media-object icon-medium" src="@routes.Assets.versioned("images/tombstone-red.svg")">
+            <div class="media alert alert-danger alert-dismissable" role="alert" id="gameover-alert" hidden>
+                <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="media-left">
+                    <img class="media-object icon-medium" src="@routes.Assets.versioned("images/tombstone-red.svg")">
+                </div>
+                <div class="media-body">
+                    <h3 class="media-heading">Whooops. You're dead.</h3>
+                    <p>Hate to say we told you so. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
+                        Don't cry, try again.</a></p>
+                </div>
             </div>
-            <div class="media-body">
-                <h3 class="media-heading">Whooops. You're dead.</h3>
-                <p>Hate to say we told you so. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
-                    Don't cry, try again.</a></p>
+
+            <div class="media alert alert-success alert-dismissable" role="alert" id="gamewon-alert" hidden>
+                <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="media-left">
+                    <img class="media-object icon-medium" src="@routes.Assets.versioned("images/medal-green.svg")">
+                </div>
+                <div class="media-body">
+                    <h3 class="media-heading">You won and it was really awesome!</h3>
+                    <p>We always knew you could do it. Huge success. Tremenduous. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
+                        Okay enough of it now, play again.</a></p>
+                </div>
             </div>
-        </div>
 
-        <div class="media alert alert-success alert-dismissable" role="alert" id="gamewon-alert" hidden>
-            <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <div class="media-left">
-                <img class="media-object icon-medium" src="@routes.Assets.versioned("images/medal-green.svg")">
+
+            <div id="game" class="text-center">
+                <div id="grid"></div>
             </div>
-            <div class="media-body">
-                <h3 class="media-heading">You won and it was really awesome!</h3>
-                <p>We always knew you could do it. Huge success. Tremenduous. <a href="#" class="alert-link" data-toggle="modal" data-target="#newGameModal">
-                    Okay enough of it now, play again.</a></p>
-            </div>
+
+
+            <div id="wsLog" style="display: none; margin-top: 20px;"></div>
+
+            <script src="@routes.Assets.versioned("javascripts/game.js")" type="text/javascript"></script>
+
         </div>
-
-
-        <div id="game" class="text-center">
-            <div id="grid"></div>
-        </div>
-
-
-
-        <div id="wsLog" style="display: none;"></div>
-
-        <script src="@routes.Assets.versioned("javascripts/game.js")" type="text/javascript"></script>
-
-    </div>
-}
+    }
 
 
 
