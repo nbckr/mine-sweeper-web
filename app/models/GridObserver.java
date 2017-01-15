@@ -56,17 +56,13 @@ public class GridObserver implements IObserver {
 						controller.touch();
 						break;
 					case "start":
-						System.out.println("|"+json.findPath("size").textValue()+"|");
-						System.out.println("|"+json.findPath("difficulty").textValue()+"|");
-						//controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
-						controller.startNewGame("medium","beginner");
+						controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
 						break;
 					default:
 						System.out.println("Unknown action in JSON");
 				}
 			} catch (Exception e) {
-				//System.err.println("Error while processing WebSockets data:\n" + json + "\nOriginal exception:\n" + e.getMessage());
-				System.out.println(e.getMessage());
+				System.err.println("Error while processing WebSockets data:\n" + json + "\nOriginal exception:\n" + e.getMessage());
 			}
         });
 	}
