@@ -1,4 +1,4 @@
-package models;
+package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,24 +11,27 @@ import play.mvc.WebSocket.In;
 import play.mvc.WebSocket.Out;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
-public class GridObserver implements IObserver {
-	
+/**
+ * This class is the link between one Game Controller and one web socket connection.
+ */
+public class WebSocketController implements IObserver {
+
 	private WebSocket.Out<String> out;
 	private WebSocket.In<String> in;
 	private IController controller;
 
-	private Gson gson;
-    private ObjectMapper mapper;
+	private Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
+    private ObjectMapper mapper = new ObjectMapper();
 
-	public GridObserver(IController controller, WebSocket.In<String> in, WebSocket.Out<String> out) {
-		controller.addObserver(this);
+	public WebSocketController(IController controller, In<String> in, Out<String> out) {
+		// attach to game controller
 		this.controller = controller;
+		controller.addObserver(this);
+
+		// attach to web socket
 		this.out = out;
 		this.in = in;
-		this.gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
-        mapper = new ObjectMapper();
 		setupMessageListening();
     }
 
@@ -77,7 +80,6 @@ public class GridObserver implements IObserver {
 		final JsonObject data = new JsonObject();
 		data.add("grid", gson.toJsonTree(controller.getGrid().getCellsAsRows()));
 		data.add("state", gson.toJsonTree(controller.getState()));
-
 
         return gson.toJson(data);
 	}

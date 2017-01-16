@@ -14,12 +14,12 @@ GET     /about                      controllers.HomeController.about()
 
 
 # Expose API for other services to access controller
-GET     /api/json                  controllers.HomeController.getJson
-POST    /api/json                  controllers.HomeController.postJson
+# DISABLED GET     /api/json                  controllers.HomeController.getJson
+# DISABLED POST    /api/json                  controllers.HomeController.postJson
 
 
 # WebSockets stuff
-GET     /socket                     controllers.HomeController.connectWebSocket()
+GET     /socket/:uid                controllers.HomeController.connectWebSocket(uid: String)
 
 
 # Pac4J stuff

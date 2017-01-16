@@ -6,10 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
-import de.htwg.se.minesweeper.Minesweeper;
 import de.htwg.se.minesweeper.aview.gui.GUI;
 import de.htwg.se.minesweeper.aview.tui.TUI;
-import models.GridObserver;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -20,7 +18,6 @@ import play.mvc.*;
 import views.html.*;
 
 import java.util.List;
-import java.util.Scanner;
 
 
 /**
@@ -39,14 +36,16 @@ public class HomeController extends Controller {
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
-    private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
+    //private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
+
+    WebSocketBroker webSocketBroker = new WebSocketBroker();
 
     public HomeController() {
 
         // If wished so, TUI and GUI run asynchronously for demonstration purposes
         if (SHOW_GUI_TUI) {
-            (new Thread(new TuiThread())).start();
-            (new Thread(new GuiThread())).start();
+            //(new Thread(new TuiThread())).start();
+            //(new Thread(new GuiThread())).start();
         }
     }
 
@@ -56,13 +55,8 @@ public class HomeController extends Controller {
         return profileManager.getAll(true);
     }
 
-    public LegacyWebSocket<String> connectWebSocket() {
-        return new LegacyWebSocket<String>() {
-
-            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                new GridObserver(controller, in, out);
-            }
-        };
+    public LegacyWebSocket<String> connectWebSocket(String userId) {
+        return webSocketBroker.getOrCreate(userId);
     }
 
     @Secure(clients = "Google2Client")
@@ -88,57 +82,13 @@ public class HomeController extends Controller {
         return ok(about.render());
     }
 
-
-    public Result getJson() {
-
-        final JsonObject data = new JsonObject();
-        data.add("grid", gson.toJsonTree(controller.getGrid().getCellsAsRows()));
-        data.add("state", gson.toJsonTree(controller.getState()));
-
-        return ok(gson.toJson(data)).as("text/json");
-    }
-
-    @BodyParser.Of(BodyParser.Json.class)
-    public Result postJson() {
-
-        JsonNode json = request().body().asJson();
-        String action = json.findPath("action").textValue();
-        if (action == null) {
-            return badRequest("Missing parameter [action]");
-        } else {
-
-            final int row = json.findPath("row").intValue();
-            final int col = json.findPath("col").intValue();
-
-            switch (action) {
-
-                case "reveal":
-                    controller.revealCell(row, col);
-                    return ok();
-
-                case "flag":
-                    controller.toggleFlag(row, col);
-                    return ok();
-
-                case "start":
-                    controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
-                    return created();
-
-                default:
-                    return badRequest("Unknown JSON game action");
-            }
-
-        }
-    }
-
-
-    public class TuiThread implements Runnable {
+    /*public class TuiThread implements Runnable {
 
         @Override
         public void run() {
             TUI tui = new TUI(controller);
 
-            // We can't process input as activator run doesn't listen to input, but we can print the TUI nevertheless
+            // We can't process input as activator run doesn't listen to it, but we can print the TUI nevertheless
 
             //boolean loop = true;
             //Scanner scanner = new Scanner(System.in);
@@ -156,5 +106,5 @@ public class HomeController extends Controller {
         public void run() {
             GUI gui = new GUI(controller);
         }
-    }
+    }*/
 }
