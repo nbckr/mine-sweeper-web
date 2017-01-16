@@ -131,17 +131,24 @@ function connectToWebSocket() {
     var baseUrl = window.location.host;
     var port = location.port;
 
+    // This is quite hacky - get the user id from a hidden HTML element that Play has rendered after login
+    var userId = $('#userId').text();
+
+    // localhost
     if (port === "9000") {
-        webSocket = new WebSocket("ws:" + baseUrl + "/socket");
+        webSocket = new WebSocket("ws:" + baseUrl + "/socket/" + userId);
     }
+    // Heroku environment
     else {
-        webSocket = new WebSocket("wss:" + baseUrl + "/socket");
+        webSocket = new WebSocket("wss:" + baseUrl + "/socket/" + userId);
     }
 
     logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (ready)');
 
     webSocket.onopen = function () {
         logWebSocketConnection('Socket Status: ' + webSocket.readyState + ' (open)');
+
+        // Trigger new game or current game as soon as socket is open
         sendStringToWebSocket({action: 'touch'});
     };
 
