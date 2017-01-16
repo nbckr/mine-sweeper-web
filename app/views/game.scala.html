@@ -13,7 +13,6 @@
                     <img src="@profile.getPictureUrl()" alt="user profile pic">
                     <p>@profile.getDisplayName()</p>
                     <span id="userId" hidden>@profile.getEmail()</span>
-                    <a id="logoutbtn" type="button" class="btn btn-danger" href="/logout">Log-out</a>
                 </div>
 
                     <button class="btn btn-primary btn-lg" role="button" id="show-modal" data-toggle="modal" data-target="#newGameModal">
@@ -24,15 +23,19 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
                         <li id="soundSettings">
-                            <a id="settings-sound-enabled" hidden><span class="fa fa-volume-off"></span> <span class="text">&nbsp;&nbsp;Disable Sound</span></a>
-                            <a id="settings-sound-disabled"><span class="fa fa-volume-up"></span> <span class="text">&nbsp;Enable Sound</span></a>
+                            <a id="settings-sound-enabled"><span class="fa fa-volume-off"></span> <span class="text">&nbsp;&nbsp;Disable Sound</span></a>
+                            <a id="settings-sound-disabled" style="display: none"><span class="fa fa-volume-up"></span> <span class="text">&nbsp;Enable Sound</span></a>
                         </li>
 
-
-                        <li role="separator" class="divider"></li>
                         <li id="settings-devmode">
                             <a id="settings-devmode-disabled"><span class="fa fa-code"></span> <span class="text">Enable Dev Mode</span></a>
-                            <a id="settings-devmode-enabled" hidden><span class="fa fa-code"></span> <span class="text">Disable Dev Mode</span></a>
+                            <a id="settings-devmode-enabled" style="display: none"><span class="fa fa-code"></span> <span class="text">Disable Dev Mode</span></a>
+                        </li>
+
+                        <li role="separator" class="divider"></li>
+
+                        <li>
+                            <a href="/logout"><span class="fa fa-sign-out"></span><span class="text">Logout User</span></a>
                         </li>
                     </ul>
                 </div>
