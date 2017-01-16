@@ -21,9 +21,18 @@
                 <div class="dropdown pull-right">
                     <button class="btn btn-primary dropdown-toggle fa fa-cog" type="button" id="settings-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a id="settings-sound"><span class="fa fa-volume-up"></span> <span class="text">Disable Sound</span></a></li>
+
+                        <li id="soundSettings">
+                            <a id="settings-sound-enabled"><span class="fa fa-volume-off"></span> <span class="text">&nbsp;&nbsp;Disable Sound</span></a>
+                            <a id="settings-sound-disabled"><span class="fa fa-volume-up"></span> <span class="text">&nbsp;Enable Sound</span></a>
+                        </li>
+
+
                         <li role="separator" class="divider"></li>
-                        <li><a id="settings-devmode"><span class="fa fa-code"></span> <span class="text">Enable Dev Mode</span></a></li>
+                        <li id="settings-devmode">
+                            <a id="settings-devmode-disabled"><span class="fa fa-code"></span> <span class="text">Enable Dev Mode</span></a>
+                            <a id="settings-devmode-enabled"><span class="fa fa-code"></span> <span class="text">Disable Dev Mode</span></a>
+                        </li>
                     </ul>
                 </div>
 

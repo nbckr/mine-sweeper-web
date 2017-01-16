@@ -76,32 +76,50 @@ $(function () {
         devMode = !devMode;
         if (devMode) {
             $('.danger').addClass('mine');
-            $settingsDevMode.children('.text').text(' Disable Dev Mode');
+            //$settingsDevMode.children('.text').text(' Disable Dev Mode');
+            $("#settings-devmode-enabled").show();
+            $("#settings-devmode-disabled").hide();
             console.log($settingsDevMode);
             $wsLog.fadeIn(animationTime);
         } else {
             $('.danger').not('.revealed').removeClass('mine');
             $wsLog.fadeOut(animationTime);
-            $settingsDevMode.children('.text').text(' Enable Dev Mode');
+            //$settingsDevMode.children('.text').text(' Enable Dev Mode');
+            $("#settings-devmode-enabled").hide();
+            $("#settings-devmode-disabled").show();
         }
     });
 
     // Toggle sound
-    var $settingsSound = $('#settings-sound').first();
+    var $settingsSound = $('#soundSettings').first();
     $settingsSound.on('click', function () {
+        settingsSoundFunction($settingsSound);
+    });
+
+
+    function settingsSoundFunction($settingsSound) {
         muteSound = !muteSound;
         if (muteSound) {
             $('audio').each(function () {
                 this.muted = true;
             });
-            $settingsSound.children('.text').text(' Enable Sound');
+            //$settingsSound.children('.text').text(' Enable Sound');
+
+            $("#settings-sound-enabled").hide();
+            $("#settings-sound-disabled").show();
+
         } else {
             $('audio').each(function () {
                 this.muted = false;
             });
-            $settingsSound.children('.text').text(' Disable Sound');
+            //$settingsSound.children('.text').text(' Disable Sound');
+
+            $("#settings-sound-disabled").hide();
+            $("#settings-sound-enabled").show();
+
+
         }
-    });
+    };
 
     // Prevent context menu
     $('body').on('contextmenu', function () {
