@@ -73,13 +73,22 @@ $(function () {
     // Toggle dev mode
     var $settingsDevMode = $('#settings-devmode').first();
     $settingsDevMode.on('click', function () {
+        toggleDevMode();
+    });
+
+    // Toggle sound
+    var $settingsSound = $('#soundSettings').first();
+    $settingsSound.on('click', function () {
+        toggleSoundOption();
+    });
+
+    function toggleDevMode() {
         devMode = !devMode;
         if (devMode) {
             $('.danger').addClass('mine');
             //$settingsDevMode.children('.text').text(' Disable Dev Mode');
             $("#settings-devmode-enabled").show();
             $("#settings-devmode-disabled").hide();
-            console.log($settingsDevMode);
             $wsLog.fadeIn(animationTime);
         } else {
             $('.danger').not('.revealed').removeClass('mine');
@@ -88,22 +97,14 @@ $(function () {
             $("#settings-devmode-enabled").hide();
             $("#settings-devmode-disabled").show();
         }
-    });
+    }
 
-    // Toggle sound
-    var $settingsSound = $('#soundSettings').first();
-    $settingsSound.on('click', function () {
-        settingsSoundFunction($settingsSound);
-    });
-
-
-    function settingsSoundFunction($settingsSound) {
+    function toggleSoundOption() {
         muteSound = !muteSound;
         if (muteSound) {
             $('audio').each(function () {
                 this.muted = true;
             });
-            //$settingsSound.children('.text').text(' Enable Sound');
 
             $("#settings-sound-enabled").hide();
             $("#settings-sound-disabled").show();
@@ -112,14 +113,11 @@ $(function () {
             $('audio').each(function () {
                 this.muted = false;
             });
-            //$settingsSound.children('.text').text(' Disable Sound');
 
             $("#settings-sound-disabled").hide();
             $("#settings-sound-enabled").show();
-
-
         }
-    };
+    }
 
     // Prevent context menu
     $('body').on('contextmenu', function () {
@@ -162,6 +160,7 @@ function connectToWebSocket() {
     };
 
     webSocket.onerror = function (err) {
+        alert('Error with WebSockets. Please try again shortly.');
         logWebSocketConnection('Socket Error: ' + err);
     }
 }
