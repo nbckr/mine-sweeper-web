@@ -1,5 +1,6 @@
 package controllers;
 
+import de.htwg.se.minesweeper.controller.impl.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import play.mvc.LegacyWebSocket;
@@ -17,23 +18,35 @@ public class WebSocketBroker {
 
     private static final Logger LOGGER = LogManager.getRootLogger();
 
-    private Map<String, LegacyWebSocket<String>> activeUsers;
+    private Map<String, LegacyWebSocket<String>> webSockets;
+    private Map<String, WebSocketController> webSocketControllers;
     private Map<String, Long> timesOfLastInteraction;
+
     private Timer timer = new Timer();
 
     /* Time in ms after which we delete game to prevent cache trashing */
-    private static final int MAX_AGE = 4 * 60 * 60 * 1000;
+    private static final int MAX_AGE = 1 * 60 * 60 * 1000;
 
     /* Period after which to check data in ms */
     private static final int CHECK_PERIOD = 5 * 60 * 1000; //3 * 60 * 60 * 1000;
 
+    /* Period in ms after which we send a ping to prevent Heroku from closing WebSocket */
+    private static final int PING_PERIOD = 30 * 1000;
+
+    /* Period in ms after which we actually want to time out WebSocket */
+    // private static final int TIMEOUT_PERIOD = 5 * 60 * 1000;
+    // Just set MAX_AGE lower to remove socket after 1 hour
+
     public WebSocketBroker() {
-        LOGGER.info("CONSTRUCTOR Broker");
-        this.activeUsers = new HashMap<>();
+        this.webSockets = new HashMap<>();
+        this.webSocketControllers = new HashMap<>();
         this.timesOfLastInteraction = new HashMap<>();
 
         // Check regularly if we can delete data
-        timer.schedule(new CheckMemoryTask(), CHECK_PERIOD, CHECK_PERIOD);
+        timer.schedule(new GarbageCollectorTask(), CHECK_PERIOD, CHECK_PERIOD);
+
+        // Send pings to everyone who has been active in the last hour
+        timer.schedule(new PingTask(), PING_PERIOD, PING_PERIOD);
     }
 
     /**
@@ -43,36 +56,37 @@ public class WebSocketBroker {
     public LegacyWebSocket<String> getOrCreate(String userId) {
 
         // No game running for user, open new web socket and start game controller with default values
-        if (!activeUsers.containsKey(userId)) {
+        if (!webSockets.containsKey(userId)) {
 
             de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
 
             LegacyWebSocket<String> webSocket = new LegacyWebSocket<String>() {
                 public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                    new WebSocketController(controller, in, out);
+                    WebSocketController webSocketController = new WebSocketController(controller, in, out);
+                    webSocketControllers.put(userId, webSocketController);
                 }
             };
 
-            activeUsers.put(userId, webSocket);
+            webSockets.put(userId, webSocket);
         }
 
         timesOfLastInteraction.put(userId, System.currentTimeMillis());
-        return activeUsers.get(userId);
+        return webSockets.get(userId);
     }
 
-    private class CheckMemoryTask extends TimerTask {
+    private class GarbageCollectorTask extends TimerTask {
 
         @Override
         public void run() {
+            LOGGER.info("Checking broker memory... current size " + webSockets.size());
 
-            LOGGER.info("Checking broker memory... current size " + activeUsers.size());
-
-            activeUsers.keySet().forEach(userId -> {
+            webSockets.keySet().forEach(userId -> {
                 LOGGER.info("[UserId] " + userId);
 
                 if (isTooOld(timesOfLastInteraction.get(userId))) {
                     LOGGER.warn("Deleting data for user " + userId);
-                    activeUsers.remove(userId);
+                    webSockets.remove(userId);
+                    webSocketControllers.remove(userId);
                     timesOfLastInteraction.remove(userId);
                 }
             });
@@ -80,6 +94,19 @@ public class WebSocketBroker {
 
         private boolean isTooOld(long time) {
             return System.currentTimeMillis() - MAX_AGE > time;
+        }
+    }
+
+    private class PingTask extends TimerTask {
+
+        @Override
+        public void run() {
+            LOGGER.info("Run ping task");
+
+            webSocketControllers.keySet().forEach(userId -> {
+                LOGGER.info("Sending a ping to " + userId);
+                webSocketControllers.get(userId).ping();
+            });
         }
     }
 }

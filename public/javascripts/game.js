@@ -151,6 +151,9 @@ function connectToWebSocket() {
     };
 
     webSocket.onmessage = function (message) {
+        // We send pings periodically to keep WebSocket alive.
+        if (message.data === 'ping') return;
+
         var messageAsJson = JSON.parse(message.data);
         updateData(messageAsJson);
     };

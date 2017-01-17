@@ -75,6 +75,10 @@ public class WebSocketController implements IObserver {
 		out.write(getGridJson());
 	}
 
+	public void ping() {
+		out.write("ping");
+	}
+
 	private String getGridJson() {
 
 		final JsonObject data = new JsonObject();
