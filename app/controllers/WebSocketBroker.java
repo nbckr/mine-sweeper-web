@@ -19,7 +19,6 @@ public class WebSocketBroker {
     private static final Logger LOGGER = LogManager.getRootLogger();
 
     private Map<String, LegacyWebSocket<String>> webSockets;
-    private Map<String, WebSocketController> webSocketControllers;
     private Map<String, Long> timesOfLastInteraction;
 
     private Timer timer = new Timer();
@@ -30,23 +29,12 @@ public class WebSocketBroker {
     /* Period after which to check data in ms */
     private static final int CHECK_PERIOD = 5 * 60 * 1000; //3 * 60 * 60 * 1000;
 
-    /* Period in ms after which we send a ping to prevent Heroku from closing WebSocket */
-    private static final int PING_PERIOD = 30 * 1000;
-
-    /* Period in ms after which we actually want to time out WebSocket */
-    // private static final int TIMEOUT_PERIOD = 5 * 60 * 1000;
-    // Just set MAX_AGE lower to remove socket after 1 hour
-
     public WebSocketBroker() {
         this.webSockets = new HashMap<>();
-        this.webSocketControllers = new HashMap<>();
         this.timesOfLastInteraction = new HashMap<>();
 
         // Check regularly if we can delete data
         timer.schedule(new GarbageCollectorTask(), CHECK_PERIOD, CHECK_PERIOD);
-
-        // Send pings to everyone who has been active in the last hour
-        timer.schedule(new PingTask(), PING_PERIOD, PING_PERIOD);
     }
 
     /**
@@ -63,7 +51,6 @@ public class WebSocketBroker {
             LegacyWebSocket<String> webSocket = new LegacyWebSocket<String>() {
                 public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
                     WebSocketController webSocketController = new WebSocketController(controller, in, out);
-                    webSocketControllers.put(userId, webSocketController);
                 }
             };
 
@@ -86,7 +73,6 @@ public class WebSocketBroker {
                 if (isTooOld(timesOfLastInteraction.get(userId))) {
                     LOGGER.warn("Deleting data for user " + userId);
                     webSockets.remove(userId);
-                    webSocketControllers.remove(userId);
                     timesOfLastInteraction.remove(userId);
                 }
             });
@@ -94,19 +80,6 @@ public class WebSocketBroker {
 
         private boolean isTooOld(long time) {
             return System.currentTimeMillis() - MAX_AGE > time;
-        }
-    }
-
-    private class PingTask extends TimerTask {
-
-        @Override
-        public void run() {
-            LOGGER.info("Run ping task");
-
-            webSocketControllers.keySet().forEach(userId -> {
-                LOGGER.info("Sending a ping to " + userId);
-                webSocketControllers.get(userId).ping();
-            });
         }
     }
 }
