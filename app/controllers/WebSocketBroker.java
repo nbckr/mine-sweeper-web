@@ -50,7 +50,7 @@ public class WebSocketBroker {
 
             LegacyWebSocket<String> webSocket = new LegacyWebSocket<String>() {
                 public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                    WebSocketController webSocketController = new WebSocketController(controller, in, out);
+                    new WebSocketController(controller, in, out);
                 }
             };
 
