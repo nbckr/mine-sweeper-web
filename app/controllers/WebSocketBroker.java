@@ -20,7 +20,7 @@ public class WebSocketBroker {
 
     private static final Logger LOGGER = LogManager.getRootLogger();
 
-    private static final boolean SHOW_GUI_TUI = true;
+    private static final boolean SHOW_GUI_TUI = false;
 
     private Map<String, LegacyWebSocket<String>> webSockets;
     private Map<String, WebSocketController> webSocketControllers;
@@ -140,8 +140,6 @@ public class WebSocketBroker {
             //Scanner scanner = new Scanner(System.in);
             //while (loop) {
             //    loop = tui.processInput(scanner.next());
-            //    System.out.println("HALLO");
-            //    System.err.println("WELT");
             //}
         }
     }

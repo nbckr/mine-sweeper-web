@@ -16,7 +16,7 @@ var webSocket;
 
 // default values
 var animationTime = 1000;
-var longPressTime = 400;
+var longPressTime = 500;
 
 var windowsWidth = $(window).width();
 var isMobile = false;
@@ -221,14 +221,16 @@ function generateGrid() {
                 }
             });
 
-            // jQuery mobile: Enable long press to flag
+            // jQuery mobile: Enable long press to flag and vibrate phone
             $cell.on('touchstart', function (e) {
                 tapHold = setTimeout(function () {
                     sendCellAction(cell, 'flag');
+                    navigator.vibrate(50);
+                    return false;
                 }, longPressTime);
             }).on("touchend", function (e) {
                 clearTimeout(tapHold);
-                // this prevents actual mouseup action: return false;
+                return true;
             });
 
             updateCell($cell, cell);
@@ -345,6 +347,8 @@ function explodePage() {
 
     // For animation, we hide overflow-y, so user could lose access to 'New Game' button unless we scroll up
     $bodywrapper.scrollTop(0, 0);
+
+    navigator.vibrate(350);
 }
 
 function celebratePage() {
