@@ -1,5 +1,7 @@
 package controllers;
 
+import de.htwg.se.minesweeper.aview.gui.GUI;
+import de.htwg.se.minesweeper.aview.tui.TUI;
 import de.htwg.se.minesweeper.controller.impl.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +19,8 @@ import java.util.TimerTask;
 public class WebSocketBroker {
 
     private static final Logger LOGGER = LogManager.getRootLogger();
+
+    private static final boolean SHOW_GUI_TUI = false;
 
     private Map<String, LegacyWebSocket<String>> webSockets;
     private Map<String, Long> timesOfLastInteraction;
@@ -47,6 +51,13 @@ public class WebSocketBroker {
         if (!webSockets.containsKey(userId)) {
 
             de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
+
+
+            // If wished so, TUI and GUI run asynchronously for demonstration purposes
+            if (SHOW_GUI_TUI) {
+                (new Thread(new TuiThread(controller))).start();
+                (new Thread(new GuiThread(controller))).start();
+            }
 
             LegacyWebSocket<String> webSocket = new LegacyWebSocket<String>() {
                 public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
@@ -80,6 +91,41 @@ public class WebSocketBroker {
 
         private boolean isTooOld(long time) {
             return System.currentTimeMillis() - MAX_AGE > time;
+        }
+    }
+
+    public class TuiThread implements Runnable {
+
+        private Controller controller;
+
+        public TuiThread(Controller controller) {
+            this.controller = controller;
+        }
+
+        @Override
+        public void run() {
+            TUI tui = new TUI(controller);
+
+            // We can't process input as activator run doesn't listen to it, but we can print the TUI nevertheless
+
+            //boolean loop = true;
+            //Scanner scanner = new Scanner(System.in);
+            //while (loop) {
+            //    loop = tui.processInput(scanner.next());
+            //}
+        }
+    }
+
+    public class GuiThread implements Runnable {
+
+        private Controller controller;
+
+        public GuiThread(Controller controller) {
+            this.controller = controller;
+        }
+        @Override
+        public void run() {
+            GUI gui = new GUI(controller);
         }
     }
 }

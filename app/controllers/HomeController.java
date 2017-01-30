@@ -26,8 +26,6 @@ import java.util.List;
  */
 public class HomeController extends Controller {
 
-    private static final boolean SHOW_GUI_TUI = true;
-
     @Inject
     private Config config;
 
@@ -41,12 +39,6 @@ public class HomeController extends Controller {
     WebSocketBroker webSocketBroker = new WebSocketBroker();
 
     public HomeController() {
-
-        // If wished so, TUI and GUI run asynchronously for demonstration purposes
-        if (SHOW_GUI_TUI) {
-            //(new Thread(new TuiThread())).start();
-            //(new Thread(new GuiThread())).start();
-        }
     }
 
     private List<CommonProfile> getProfiles() {
@@ -82,29 +74,4 @@ public class HomeController extends Controller {
         return ok(about.render());
     }
 
-    /*public class TuiThread implements Runnable {
-
-        @Override
-        public void run() {
-            TUI tui = new TUI(controller);
-
-            // We can't process input as activator run doesn't listen to it, but we can print the TUI nevertheless
-
-            //boolean loop = true;
-            //Scanner scanner = new Scanner(System.in);
-            //while (loop) {
-            //    loop = tui.processInput(scanner.next());
-            //    System.out.println("HALLO");
-            //    System.err.println("WELT");
-            //}
-        }
-    }
-
-    public class GuiThread implements Runnable {
-
-        @Override
-        public void run() {
-            GUI gui = new GUI(controller);
-        }
-    }*/
 }
