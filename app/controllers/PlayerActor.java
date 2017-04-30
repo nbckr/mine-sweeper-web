@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import de.htwg.se.minesweeper.controller.impl.Controller;
+import de.htwg.se.minesweeper.persistence.couchdb.CouchDBDAO;
 import observer.Event;
 import observer.IObserver;
 
@@ -25,8 +26,11 @@ public class PlayerActor extends UntypedActor implements IObserver {
 	}
 
     private final ActorRef out;
-    private String userId;
-    private Controller controller;
+    private final String userId;
+    private final Controller controller;
+
+    private static final boolean SHOW_GUI_TUI = true;
+
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
     private ObjectMapper mapper = new ObjectMapper();
@@ -34,9 +38,19 @@ public class PlayerActor extends UntypedActor implements IObserver {
     public PlayerActor(ActorRef out, String userId) {
         this.out = out;
         this.userId = userId;
-        this.controller = new Controller();
+
+        // TODO DI
+
+        // TODO Rodrigo & Gabriela - TAMACUN <3
+
+        CouchDBDAO someRandomDB = new CouchDBDAO();
+
+        this.controller = new Controller(someRandomDB, userId);
         controller.addObserver(this);
 
+        if (SHOW_GUI_TUI) {
+            getContext().actorOf(GuiTuiActor.props(controller), "gui_tui_" + userId);
+        }
     }
 
     @Override
@@ -92,5 +106,9 @@ public class PlayerActor extends UntypedActor implements IObserver {
         data.add("state", gson.toJsonTree(controller.getState()));
 
         return gson.toJson(data);
+    }
+
+    public void postStop() throws Exception {
+        controller.removeAllObservers();
     }
 }
