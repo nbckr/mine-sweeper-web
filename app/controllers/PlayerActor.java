@@ -85,6 +85,12 @@ public class PlayerActor extends UntypedActor implements IObserver {
                 case "start":
                     controller.startNewGame(json.findPath("size").textValue(), json.findPath("difficulty").textValue());
                     break;
+                case "save":
+                    controller.saveGame();
+                    break;
+                case "load":
+                    controller.loadGame();
+                    break;
                 default:
                     System.out.println("Unknown action in JSON");
             }
