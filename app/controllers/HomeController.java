@@ -32,12 +32,6 @@ public class HomeController extends Controller {
     @Inject
     private PlaySessionStore playSessionStore;
 
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
-
-    //private static de.htwg.se.minesweeper.controller.impl.Controller controller = new de.htwg.se.minesweeper.controller.impl.Controller();
-
-    WebSocketBroker webSocketBroker = new WebSocketBroker();
-
     public HomeController() {
     }
 
@@ -48,7 +42,7 @@ public class HomeController extends Controller {
     }
 
     public LegacyWebSocket<String> connectWebSocket(String userId) {
-        return webSocketBroker.getOrCreate(userId);
+        return WebSocket.withActor(out -> PlayerActor.props(out, userId));
     }
 
     @Secure(clients = "Google2Client")

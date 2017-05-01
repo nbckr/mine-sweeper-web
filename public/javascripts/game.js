@@ -132,6 +132,7 @@ function connectToWebSocket() {
     // This is quite hacky - get the user id from a hidden HTML element that Play has rendered after login
     var userId = $('#userId').text();
 
+    // FIXME: This if-else looks weird
     // localhost
     if (port === "9000") {
         webSocket = new WebSocket("ws:" + baseUrl + "/socket/" + userId);
