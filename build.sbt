@@ -35,6 +35,7 @@ libraryDependencies ++= Seq(
   "be.objectify" %% "deadbolt-java" % "2.5.1"
 )
 
+resolvers += Resolver.url("Typesafe Ivy releases", url("https://repo.typesafe.com/typesafe/ivy-releases"))(Resolver.ivyStylePatterns)
 
 includeFilter in (Assets, LessKeys.less) := "*.less" | "utils/*.less"
 excludeFilter in (Assets, LessKeys.less) := "_*.less"
