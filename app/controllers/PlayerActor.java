@@ -13,6 +13,7 @@ import de.htwg.se.minesweeper.controller.impl.Controller;
 import de.htwg.se.minesweeper.persistence.couchdb.CouchDBDAO;
 import observer.Event;
 import observer.IObserver;
+import play.Configuration;
 
 import java.io.IOException;
 
@@ -21,17 +22,11 @@ import java.io.IOException;
  */
 public class PlayerActor extends UntypedActor implements IObserver {
 
-	public static Props props(ActorRef out, String userId) {
-		return Props.create(PlayerActor.class, out, userId);
-	}
-
+    private static final boolean SHOW_GUI_TUI = true;
+    private final ActorRef solver;
     private final ActorRef out;
     private final String userId;
     private final Controller controller;
-
-    private static final boolean SHOW_GUI_TUI = true;
-
-
     private Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -41,17 +36,22 @@ public class PlayerActor extends UntypedActor implements IObserver {
 
         // TODO DI
 
-        // TODO Rodrigo & Gabriela - TAMACUN <3
-
         CouchDBDAO someRandomDB = new CouchDBDAO();
 
         this.controller = new Controller(someRandomDB, userId);
         controller.addObserver(this);
 
+        // Set up child actors
         if (SHOW_GUI_TUI) {
             getContext().actorOf(GuiTuiActor.props(controller), "gui_tui_" + userId);
         }
+
+        solver = getContext().actorOf(SolveActor.props(out, controller), "solver_" + userId);
     }
+
+    public static Props props(ActorRef out, String userId) {
+		return Props.create(PlayerActor.class, out, userId);
+	}
 
     @Override
 	public void onReceive(Object msg) throws Throwable {
@@ -90,6 +90,9 @@ public class PlayerActor extends UntypedActor implements IObserver {
                     break;
                 case "load":
                     controller.loadGame();
+                    break;
+                case "solve":
+                    solver.tell(json.findPath("type").textValue(), getContext().sender());
                     break;
                 default:
                     System.out.println("Unknown action in JSON");

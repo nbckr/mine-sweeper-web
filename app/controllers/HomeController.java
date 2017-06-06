@@ -14,6 +14,7 @@ import org.pac4j.core.profile.ProfileManager;
 import org.pac4j.play.PlayWebContext;
 import org.pac4j.play.java.Secure;
 import org.pac4j.play.store.PlaySessionStore;
+import play.Configuration;
 import play.mvc.*;
 import views.html.*;
 
