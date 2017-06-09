@@ -1,4 +1,4 @@
-package controllers;
+package actors;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -14,6 +14,7 @@ import de.htwg.se.minesweeper.persistence.couchdb.CouchDBDAO;
 import observer.Event;
 import observer.IObserver;
 import play.Configuration;
+import play.libs.ws.WSClient;
 
 import java.io.IOException;
 
@@ -22,17 +23,21 @@ import java.io.IOException;
  */
 public class PlayerActor extends UntypedActor implements IObserver {
 
-    private static final boolean SHOW_GUI_TUI = true;
+    private static final boolean SHOW_GUI_TUI = false;
     private final ActorRef solver;
     private final ActorRef out;
     private final String userId;
+    private final Configuration configuration;
+    private final WSClient wsClient;
     private final Controller controller;
     private Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
     private ObjectMapper mapper = new ObjectMapper();
 
-    public PlayerActor(ActorRef out, String userId) {
+    public PlayerActor(ActorRef out, String userId, Configuration configuration, WSClient wsClient) {
         this.out = out;
         this.userId = userId;
+        this.configuration = configuration;
+        this.wsClient = wsClient;
 
         // TODO DI
 
@@ -46,11 +51,11 @@ public class PlayerActor extends UntypedActor implements IObserver {
             getContext().actorOf(GuiTuiActor.props(controller), "gui_tui_" + userId);
         }
 
-        solver = getContext().actorOf(SolveActor.props(out, controller), "solver_" + userId);
+        solver = getContext().actorOf(SolveActor.props(controller, configuration, wsClient), "solver_" + userId);
     }
 
-    public static Props props(ActorRef out, String userId) {
-		return Props.create(PlayerActor.class, out, userId);
+    public static Props props(ActorRef out, String userId, Configuration configuration, WSClient wsClient) {
+		return Props.create(PlayerActor.class, out, userId, configuration, wsClient);
 	}
 
     @Override
@@ -69,6 +74,9 @@ public class PlayerActor extends UntypedActor implements IObserver {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // DEBUG:
+        solver.tell("one", getContext().sender());
 
         try {
             String action = json.findPath("action").textValue();

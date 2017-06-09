@@ -1,4 +1,4 @@
-package controllers;
+package actors;
 
 import akka.actor.Props;
 import akka.actor.UntypedActor;
@@ -29,6 +29,7 @@ public class GuiTuiActor extends UntypedActor {
     }
 
     public void postStop() throws Exception {
+
         gui.dispose();
     }
 }

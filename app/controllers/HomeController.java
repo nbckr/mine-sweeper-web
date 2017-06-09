@@ -1,13 +1,7 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import actors.PlayerActor;
 import com.google.inject.Inject;
-import de.htwg.se.minesweeper.aview.gui.GUI;
-import de.htwg.se.minesweeper.aview.tui.TUI;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -15,6 +9,7 @@ import org.pac4j.play.PlayWebContext;
 import org.pac4j.play.java.Secure;
 import org.pac4j.play.store.PlaySessionStore;
 import play.Configuration;
+import play.libs.ws.WSClient;
 import play.mvc.*;
 import views.html.*;
 
@@ -31,6 +26,12 @@ public class HomeController extends Controller {
     private Config config;
 
     @Inject
+    Configuration configuration;
+
+    @Inject
+    WSClient wsClient;
+
+    @Inject
     private PlaySessionStore playSessionStore;
 
     public HomeController() {
@@ -43,7 +44,7 @@ public class HomeController extends Controller {
     }
 
     public LegacyWebSocket<String> connectWebSocket(String userId) {
-        return WebSocket.withActor(out -> PlayerActor.props(out, userId));
+        return WebSocket.withActor(out -> PlayerActor.props(out, userId, configuration, wsClient));
     }
 
     @Secure(clients = "Google2Client")
