@@ -75,9 +75,6 @@ public class PlayerActor extends UntypedActor implements IObserver {
             e.printStackTrace();
         }
 
-        // DEBUG:
-        solver.tell("one", getContext().sender());
-
         try {
             String action = json.findPath("action").textValue();
             switch (action) {

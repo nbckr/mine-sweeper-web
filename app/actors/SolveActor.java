@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
+import de.htwg.se.minesweeper.controller.IController;
+import de.htwg.se.minesweeper.controller.IController.State;
 import de.htwg.se.minesweeper.controller.impl.Controller;
 import play.Configuration;
 import play.libs.ws.WSClient;
@@ -54,23 +56,58 @@ public class SolveActor extends UntypedActor {
 
                     System.out.println(solveResult);
 
-                    Position position;
                     if (!solveResult.clears.isEmpty()) {
-                        position = solveResult.clears.get(0);
+                        Position clearPos = solveResult.clears.get(0);
+                        controller.revealCell(clearPos.row, clearPos.col);
                     } else if (!solveResult.mines.isEmpty()) {
-                        position = solveResult.mines.get(0);
+                        Position minePos = solveResult.mines.get(0);
+                        controller.toggleFlag(minePos.row, minePos.col);
                     } else {
-                        System.out.println("Can't open or flag a cell!");
-                        return;
+                        System.out.println("Can't open or flag a cell");
                     }
-                    controller.revealCell(position.row, position.col);
                 });
                 break;
             case "single_step":
+                solveSingleStep();
                 break;
             case "all":
+                solveAll();
                 break;
         }
+    }
+
+    private void solveAll() {
+        solveSingleStep().thenAccept(canContinue -> {
+            if (canContinue) {
+                solveAll();
+            }
+        });
+    }
+
+    /**
+     * @return if the solver can continue
+     */
+    private CompletionStage<Boolean> solveSingleStep() {
+        return fetchSolveResult().handle((solveResult, err) -> {
+            State state = controller.getState();
+            if (state == State.GAME_LOST || state == State.GAME_WON) {
+                return false;
+            }
+
+            if (err != null) {
+                err.printStackTrace();
+                return false;
+            }
+
+            if (solveResult.clears.isEmpty() && solveResult.mines.isEmpty()) {
+                System.out.println("Can't open or flag a cell");
+                return false;
+            } else {
+                solveResult.mines.forEach(minePos -> controller.toggleFlag(minePos.row, minePos.col));
+                solveResult.clears.forEach(clearPos -> controller.revealCell(clearPos.row, clearPos.col));
+                return true;
+            }
+        });
     }
 
     private CompletionStage<SolveResult> fetchSolveResult() {
@@ -81,6 +118,8 @@ public class SolveActor extends UntypedActor {
         return postReq.thenApply(res -> {
             String body = res.getBody();
 
+            System.out.println(body);
+
             return gson.fromJson(body, SolveResult.class);
         });
     }
@@ -90,7 +129,7 @@ public class SolveActor extends UntypedActor {
     }
 
     public static Props props(Controller controller, Configuration configuration, WSClient wsClient) {
-        return Props.create(SolveActor.class,controller, configuration, wsClient);
+        return Props.create(SolveActor.class, controller, configuration, wsClient);
     }
 
     private class SolveResult {
