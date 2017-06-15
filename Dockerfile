@@ -10,6 +10,6 @@ RUN mv /app/tmp/mine-sweeper-web-1.0-SNAPSHOT/* /app
 RUN rm -r -f /app/tmp/
 
 CMD /app/bin/mine-sweeper-web\
-    -Dconfig.file=/app/conf/heroku.conf
+    -Dconfig.file=/app/conf/docker.conf
 
 EXPOSE 9000

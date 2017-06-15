@@ -111,6 +111,9 @@ public class SolveActor extends UntypedActor {
     }
 
     private CompletionStage<SolveResult> fetchSolveResult() {
+        System.err.println("------------");
+        System.err.println(solveServiceUrl);
+        System.err.println("------------");
         CompletionStage<WSResponse> postReq = wsClient.url(solveServiceUrl + "/solve")
                 .setContentType("application/json")
                 .post(getGridJson());

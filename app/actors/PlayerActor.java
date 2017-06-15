@@ -41,7 +41,7 @@ public class PlayerActor extends UntypedActor implements IObserver {
 
         // TODO DI
 
-        CouchDBDAO someRandomDB = new CouchDBDAO();
+        CouchDBDAO someRandomDB = new CouchDBDAO(configuration.getString("couchDbUrl"));
 
         this.controller = new Controller(someRandomDB, userId);
         controller.addObserver(this);
